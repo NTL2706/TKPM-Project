@@ -1,7 +1,5 @@
 ﻿
-const pitchModel = require("../model/pitchModel");
-async function Paginated(req, res, next) {
-  const page = parseInt(req.params["page"]);
+async function Paginated(page, model) {
   const limit = 6;
   const startIndex = (page - 1) * limit;
   const endIndex = page * limit;
@@ -9,7 +7,7 @@ async function Paginated(req, res, next) {
   const results = {};
 
  
-  if (endIndex < (await pitchModel.find({})).length) {
+  if (endIndex < (await model.find({})).length) {
     results.next = page + 1;
   }
 
@@ -19,12 +17,10 @@ async function Paginated(req, res, next) {
   }
 
   try {
-    results.results = await pitchModel.find({}).limit(limit).skip(startIndex).exec();
+    results.results = await model.find({}).limit(limit).skip(startIndex).exec();
     results.currentPage = page;
-    req.paginatedResults = results.results;
-    console.log(results.next);
-    req.results = results;
-    next();
+    
+    return results;
   } catch (error) {
     
   }
