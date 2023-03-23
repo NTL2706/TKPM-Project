@@ -1,4 +1,4 @@
-{{>header}}
+﻿{{>header}}
 	<!-- top Products -->
 	<div class="ads-grid_shop">
 		<div class="shop_inner_inf">
@@ -243,7 +243,7 @@
 									</div>
 									<div class="item-info-product">
 									<h4>
-										<a href="single.html">{{Name}}</a>
+										<a href="{{url}}">{{name}}</a>
 									</h4>
 									<div class="info-product-price">
 										<div class="grid_meta">
@@ -996,7 +996,7 @@
 							<nav aria-label="Page navigation example " class="d-flex justify-content-center">
                                 <ul class="pagination" style="width: fit-content;">
                                     {{#ifCond previous '>' 0 }}
-									<li class="page-item"><a class="page-link previous" href="" onclick="previousPage({{currentPage}},{{url}})">Previous</a></li>
+									<li class="page-item"><a class="page-link previous" href="" onclick="previousPage({{currentPage}})">Previous</a></li>
 									{{/ifCond}}
 									{{#ifCond previous '>' 0 }}
 										<li class="page-item"><a class="page-link" href="{{previousLink}}">{{previous}}</a></li>
@@ -1008,7 +1008,7 @@
 										<li class="page-item"><a class="page-link" href="{{nextLink}}">{{next}}</a></li>
 									{{/ifCond}}
 									{{#ifCond next '>' 0}}
-									<li class="page-item"><a class="page-link next" href="" onclick="nextPage({{currentPage}},{{url}})">Next</a></li>
+									<li class="page-item"><a class="page-link next" href="" onclick="nextPage({{currentPage}})">Next</a></li>
 									{{/ifCond}}
                                 </ul>
                             </nav>
@@ -1185,16 +1185,15 @@
         });
 </script>
 <script>
-    function previousPage(page, link){
+    function previousPage(page){
     const previous = parseInt(page) - 1;
-    $(".previous").attr(link + previous);
+    $(".previous").attr("href", "/product" + "?page=" + previous);
   }
 
-  function nextPage(page, link){
-	console.log(2);
+  function nextPage(page){
     const next = parseInt(page) + 1;
-    
-    $(".next").attr(link+ next);
+    console.log(next);
+    $(".next").attr("href", "/product/" + "?page="+ next);
   }
 </script>
 

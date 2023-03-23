@@ -479,7 +479,7 @@ li.dropdown.act a.w3_icons_act {
 }
 
 .banner-top2 {
-	background: url(../images/banner3.jpg) no-repeat 0px 0px;
+	background: url(../images/football.jpg) no-repeat 0px 0px;
 	background-size: cover;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
@@ -504,7 +504,7 @@ li.dropdown.act a.w3_icons_act {
 }
 .banner-info-wthree   h3 {
 	font-size:13em;
-	color: #fff;
+	color: cornflowerblue;
 	font-weight:700;
 	letter-spacing: 1px;
     text-shadow: 0 1px 2px rgba(0, 0, 0, .6);
@@ -512,7 +512,9 @@ li.dropdown.act a.w3_icons_act {
 
 .banner-info-wthree    p {
     font-size: 1.2em;
-    color: #fff;
+    background: -webkit-linear-gradient(#fed404, #f40606);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     margin: 0em 0;
     letter-spacing: 6px;
     font-weight: 600;

@@ -17,13 +17,25 @@
 				<!-- price range -->
 				<div class="range">
 					<h3 class="agileits-sear-head">Price range</h3>
-					<ul class="dropdown-menu6">
-						<li>
+					<div class="price-input">
+					<div class="field">
+						<span>Min</span>
+						<input type="number" class="input-min" value="2500">
+					</div>
+					<div class="separator">-</div>
+					<div class="field">
+						<span>Max</span>
+						<input type="number" class="input-max" value="7500">
+					</div>
 
-							<div id="slider-range"></div>
-							<input type="text" id="amount" style="border: 0; color: #ffffff; font-weight: normal;" />
-						</li>
-					</ul>
+      				</div>
+					<div class="slider">
+						<div class="progress"></div>
+					</div>
+					<div class="range-input">
+						<input type="range" class="range-min" min="0" max="10000" value="2500" step="100">
+						<input type="range" class="range-max" min="0" max="10000" value="7500" step="100">
+					</div>
 				</div>
 				<!-- //price range -->
 				<!--preference -->
@@ -138,7 +150,7 @@
 				</div>
 				<!-- //reviews -->
 				<!-- deals -->
-				<div class="deal-leftmk left-side">
+				{{!-- <div class="deal-leftmk left-side">
 					<h3 class="agileits-sear-head">Special Deals</h3>
 					<div class="special-sec1">
 						<div class="col-xs-4 img-deals">
@@ -190,7 +202,7 @@
 						</div>
 						<div class="clearfix"></div>
 					</div>
-				</div>
+				</div> --}}
 				<!-- //deals -->
 
 			</div>
@@ -987,13 +999,13 @@
 									<li class="page-item"><a class="page-link previous" href="" onclick="previousPage({{currentPage}})">Previous</a></li>
 									{{/ifCond}}
 									{{#ifCond previous '>' 0 }}
-										<li class="page-item"><a class="page-link" href="/product/{{previous}}">{{previous}}</a></li>
+										<li class="page-item"><a class="page-link" href="{{previousLink}}">{{previous}}</a></li>
 									{{/ifCond}}
 									{{#ifCond currentPage '>' 0 }}
-										<li class="page-item"><a class="page-link" href="/product/{{currentPage}}">{{currentPage}}</a></li>
+										<li class="page-item"><a class="page-link" href="{{currentLink}}">{{currentPage}}</a></li>
 									{{/ifCond}}
 									{{#ifCond next '>' 0 }}
-										<li class="page-item"><a class="page-link" href="/product/{{next}}">{{next}}</a></li>
+										<li class="page-item"><a class="page-link" href="{{nextLink}}">{{next}}</a></li>
 									{{/ifCond}}
 									{{#ifCond next '>' 0}}
 									<li class="page-item"><a class="page-link next" href="" onclick="nextPage({{currentPage}})">Next</a></li>
@@ -1120,7 +1132,53 @@
 	</div>
 	<!-- //newsletter-->
 	
+<script>
+	    const rangeInput = document.querySelectorAll(".range-input input"),
+            priceInput = document.querySelectorAll(".price-input input"),
+            range = document.querySelector(".slider .progress");
+        let priceGap = 1000;
+		const formatter = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'VND',
+            minimumFractionDigits: 0
+        })
+        priceInput.forEach(input => {
+            input.addEventListener("input", e => {
+                let minPrice = parseInt(priceInput[0].value),
+                    maxPrice = parseInt(priceInput[1].value);
 
+                if ((maxPrice - minPrice >= priceGap) && maxPrice <= rangeInput[1].max) {
+                    if (e.target.className === "input-min") {
+                        rangeInput[0].value = minPrice;
+                        range.style.left = formatter.format(((minPrice / rangeInput[0].max) * 100) + "%");
+                    } else {
+                        rangeInput[1].value = maxPrice;
+                        range.style.right = formatter.format (100 - (maxPrice / rangeInput[1].max) * 100 + "%");
+                    }
+                }
+            });
+        });
+
+        rangeInput.forEach(input => {
+            input.addEventListener("input", e => {
+                let minVal = parseInt(rangeInput[0].value),
+                    maxVal = parseInt(rangeInput[1].value);
+
+                if ((maxVal - minVal) < priceGap) {
+                    if (e.target.className === "range-min") {
+                        rangeInput[0].value = maxVal - priceGap
+                    } else {
+                        rangeInput[1].value = minVal + priceGap;
+                    }
+                } else {
+                    priceInput[0].value = minVal;
+                    priceInput[1].value = maxVal;
+                    range.style.left = formatter.format (((minVal / rangeInput[0].max) * 100) + "%");
+                    range.style.right = formatter.format (100 - (maxVal / rangeInput[1].max) * 100 + "%");
+                }
+            });
+        });
+</script>
 <script>
     function previousPage(page){
     const previous = parseInt(page) - 1;
@@ -1133,3 +1191,5 @@
     $(".next").attr("href", "/product/" + next);
   }
 </script>
+
+{{>footer}}

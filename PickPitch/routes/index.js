@@ -2,6 +2,7 @@
 const registerRoute = require("./registerRoute");
 const homeRoute = require("./homeRoute");
 const productRoute = require("./productRoute");
+const managerRoute = require("./managerRoute");
 function mainRoutes (app){
     app.use("/", homeRoute);
     app.use("/login",loginRoute);
@@ -13,7 +14,7 @@ function mainRoutes (app){
         });
     })
     app.use("/product",productRoute);
-
+    app.use("/manager", managerRoute);
 }
 
 module.exports = mainRoutes;
