@@ -199,6 +199,11 @@ const productController = {
       url:"/product" +"/"+managerPitchChoose._id+ "?page="
     });
   },
+
+  pitch_detail: async(req,res)=>{
+    console.log("hello");
+    res.render("pitch-detail/single_pitch")
+  }
 };
 
 module.exports = productController;
