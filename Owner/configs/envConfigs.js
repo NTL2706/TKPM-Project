@@ -2,8 +2,7 @@ require("dotenv").config({});
 
 module.exports = {
   urlMongo: process.env.URL_MONGO,
-  databaseImg: process.env.DATABASE_IMG,
-  databaseVegetable: process.env.DATABASE_VEGETABLE,
-  imgBucket: process.env.IMG_BUCKET,
+  urlMongoLocal: process.env.URL_MONGO_LOCAL,
+  dataBaseOwner: process.env.DATABASE_OWNER,
   port: process.env.port,
 };
