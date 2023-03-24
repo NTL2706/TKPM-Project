@@ -8,6 +8,27 @@ const Owner = new schema(
     password: { type: String, maxlength: 255 },
     name: { type: String, maxlength: 255 },
     address: { type: String, maxlength: 255 },
+
+    // tracking information
+    create_at: {
+      type: Date,
+      default: Date.now(),
+    },
+    update_at: {
+      update_time: {
+        type: Date,
+        default: Date.now(),
+      },
+      update_content: {
+        type: String,
+        maxlength: 255,
+        default: "create account",
+      },
+    },
+    is_delete: {
+      type: Boolean,
+      default: false,
+    },
   },
   { collection: "owner" }
 );
