@@ -1,69 +1,87 @@
-import express from "express";
-import bodyParser from "body-parser";
-import mongoose from "mongoose";
-import cors from "cors";
-import dotenv from "dotenv";
-import helmet from "helmet";
-import morgan from "morgan";
-import studentRoutes from "./routes/student.js";
-import generalRoutes from "./routes/general.js";
-import authRoutes from "./routes/auth.js";
-import xlsx from "xlsx";
-import * as path from "path";
+// Import library
+const express = require("express");
+const path = require("path");
+const bodyParser = require("body-parser");
+const exphbs = require("express-handlebars");
+const expressHandlebarsSections = require("express-handlebars-sections");
+const session = require("express-session");
 
-// data imports
-
-//
-const __dirname = path.resolve();
-
-/* CONFIGURATION */
-dotenv.config();
+// Setup variable
+const env = require("./configs/envConfigs");
 const app = express();
-app.use(express.json());
-app.use(helmet());
-app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
-app.use(morgan("common"));
+const connectDataBase = require("./configs/database");
+var PORT = env.port;
+const route = require("./routes/index");
+const passport = require("./configs/passport");
+const hbs = exphbs.create({
+  // config hbs
+  extname: "hbs",
+  defaultLayout: "main",
+  layoutsDir: __dirname + "/views/layouts",
+  partialsDir: __dirname + "/views/partials",
+});
+
+// Deploying functions
+// register `hbs.engine` with the Express app.
+// setup view engine
+app.use(express.static(path.join(__dirname, "/public")));
+
+expressHandlebarsSections(hbs);
+app.engine("hbs", hbs.engine);
+app.set("view engine", "hbs");
+app.set("views", path.join(__dirname + "/views"));
+
+app.use(
+  bodyParser.urlencoded({
+    extended: false,
+  })
+);
+
+// parse application/json
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cors());
 
-/* ROUTES */
-app.use("/student", studentRoutes);
-app.use("/general", generalRoutes);
-app.use("/auth", authRoutes);
-
-/* MONGOOSE SETUP */
-const PORT = process.env.PORT || 6001;
-mongoose
-  .connect(process.env.MONGO_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+app.use(
+  express.urlencoded({
+    extended: true,
   })
-  .then(() => {
-    app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
+);
 
-    // Read excel file from path
-    // let xlFile = xlsx.readFile("D:\\Code\\liberty-admin\\DS-HS-LIBERTY.xlsx");
-
-    // Extract the data in sheet
-    // let sheet = xlFile.Sheets[xlFile.SheetNames[0]];
-
-    // Convert sheet into JSON
-    // let dataStudents = xlsx.utils.sheet_to_json(sheet, { raw: false });
-    // console.log("🚀dataStudents:", dataStudents);
-
-    /* ONLY ADD DATA ONE TIME */
-    // User.insertMany(dataStudents);
+// setup cookie and use passport
+app.use(require("cookie-parser")());
+app.use(
+  session({
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 365,
+    },
+    resave: true,
+    saveUninitialized: true,
+    secret: "cats",
   })
-  .catch((error) => console.log(`${error} did not connect`));
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
-if (process.env.NODE_ENV === "production") {
-  // app.use(express.static(path.join()))
-  app.use(express.static(path.join(__dirname, "./client/build")));
+// connect to database
+connectDataBase();
 
-  app.get("*", (req, res) =>
-    res.sendFile(path.resolve(__dirname, "./", "client", "build", "index.html"))
-  );
-} else {
-  app.get("/", (req, res) => res.send("Please set to production"));
+// child handling parts
+route(app);
+
+// error handling
+app.use((req, res) => {
+  res.render("errors/404", { layout: false });
+});
+
+app.use((err, req, res, next) => {
+  console.log(err.message);
+  res.status(500).render("errors/500", { layout: false, error: err.message });
+});
+
+// server listen
+if (PORT == null || PORT == "") {
+  PORT = 5000;
 }
+
+app.listen(PORT, function () {
+  console.log("Server has started successfully");
+});
