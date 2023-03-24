@@ -7,6 +7,7 @@ const User = new Schema(
     email: { type: String, maxlength: 255 },
     password: { type: String, maxlength: 255 },
     user_name: { type: String, maxlength: 255 },
+<<<<<<< HEAD
     phone: { type: String, default: "**********", maxlength: 11 },
 
     // tracking information
@@ -29,6 +30,9 @@ const User = new Schema(
       type: Boolean,
       default: false,
     },
+=======
+    phone: { type: String, maxlength: 11 },
+>>>>>>> fbc2a5d060baef47181e8bd5b4d3369744a60fe4
   },
   { collection: "user" }
 );
