@@ -6,7 +6,7 @@ const User = new Schema(
   {
     email: { type: String, maxlength: 255 },
     password: { type: String, maxlength: 255 },
-    userName: { type: String, maxlength: 255 },
+    user_name: { type: String, maxlength: 255 },
     phone: { type: String, maxlength: 11 },
   },
   { collection: "user" }
