@@ -6,6 +6,8 @@ import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
 import { themeSettings } from "./theme";
 import Students from "./scenes/students";
 import Login from "./scenes/login";
+import HomePage from "./scenes/homepage";
+import NavBar from "./components/Navbar";
 
 function App() {
   const mode = useSelector((state) => state.global.mode);
@@ -17,12 +19,15 @@ function App() {
       <BrowserRouter>
         <ThemeProvider theme={theme}>
           <CssBaseline />
+          <NavBar />
           <Routes>
-            <Route path="/" element={<Login />} />
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<Login />} />
             <Route
               path="/students"
-              element={isAuth ? <Students /> : <Navigate to="/" />}
+              element={isAuth ? <Students /> : <Navigate to="/login" />}
             />
+            <Route path="/homepage" element={<HomePage />} />
           </Routes>
         </ThemeProvider>
       </BrowserRouter>

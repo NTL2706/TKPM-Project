@@ -8,10 +8,9 @@ import {
 import FlexBetween from "./FlexBetween";
 import { useDispatch } from "react-redux";
 import { setLogout, setMode } from "../state";
-import profileImage from "../assets/profile.jpeg";
 import {
   AppBar,
-  Button,
+  // Button,
   Box,
   Typography,
   IconButton,
@@ -21,113 +20,70 @@ import {
   useTheme,
 } from "@mui/material";
 
-const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
-  const dispatch = useDispatch();
-  const theme = useTheme();
+import { Button, Container, Nav, Navbar } from "react-bootstrap";
 
-  const [anchorEl, setAnchorEl] = useState(null);
-  const isOpen = Boolean(anchorEl);
-  const handleClick = (event) => setAnchorEl(event.currentTarget);
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-  const handleLogOut = () => {
-    setAnchorEl(null);
-    dispatch(setLogout());
-  };
+import profileImage from "../assets/img/profile.jpeg";
+import logoImage from "../assets/img/logo.png";
 
+const NavBar = () => {
   return (
-    <AppBar
-      sx={{
-        position: "static",
-        background: "none",
-        boxShadow: "none",
-      }}
-    >
-      <Toolbar sx={{ justifyContent: "space-between" }}>
-        {/* LEFT SIDE */}
-        <FlexBetween>
-          <IconButton onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
-            <MenuIcon />
-          </IconButton>
-          {/* <FlexBetween
-            backgroundColor={theme.palette.background.alt}
-            borderRadius="9px"
-            gap="3rem"
-            p="0.1rem 1.5rem"
+    <Navbar bg="light" expand="lg">
+      <Container fluid className="container">
+        <Navbar.Brand href="#">
+          <img src={logoImage} alt="Bootstrap" height="50" />
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="navbarScroll" />
+        <Navbar.Collapse id="navbarScroll">
+          <Nav
+            className="me-auto my-2 my-lg-0"
+            style={{ maxHeight: "100px" }}
+            navbarScroll
           >
-            <InputBase placeholder="Search..." />
-            <IconButton>
-              <Search />
-            </IconButton>
-          </FlexBetween> */}
-        </FlexBetween>
-
-        {/* RIGHT SIDE */}
-        <FlexBetween gap="1.5rem">
-          <IconButton onClick={() => dispatch(setMode())}>
-            {theme.palette.mode === "dark" ? (
-              <DarkModeOutlined sx={{ fontSize: "25px" }} />
-            ) : (
-              <LightModeOutlined sx={{ fontSize: "25px" }} />
-            )}
-          </IconButton>
-          {/* <IconButton>
-            <SettingsOutlined sx={{ fontSize: "25px" }} />
-          </IconButton> */}
-
-          <FlexBetween>
-            <Button
-              onClick={handleClick}
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                textTransform: "none",
-                gap: "1rem",
-              }}
-            >
-              <Box
-                component="img"
-                alt="profile"
-                src={profileImage}
-                height="32px"
-                width="32px"
-                borderRadius="50%"
-                sx={{ objectFit: "cover" }}
-              />
-              <Box textAlign="left">
-                <Typography
-                  fontWeight="bold"
-                  fontSize="0.85rem"
-                  sx={{ color: theme.palette.secondary[100] }}
-                >
-                  {user.name}
-                </Typography>
-                <Typography
-                  fontSize="0.75rem"
-                  sx={{ color: theme.palette.secondary[200] }}
-                >
-                  {user.occupation}
-                </Typography>
-              </Box>
-              <ArrowDropDownOutlined
-                sx={{ color: theme.palette.secondary[300], fontSize: "25px" }}
-              />
+            <Nav.Link href="#action1">
+              <h4>About us</h4>
+            </Nav.Link>
+            {/* <Nav.Link href="#action2">Link</Nav.Link>
+            <NavDropdown title="Link" id="navbarScrollingDropdown">
+              <NavDropdown.Item href="#action3">Action</NavDropdown.Item>
+              <NavDropdown.Item href="#action4">
+                Another action
+              </NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item href="#action5">
+                Something else here
+              </NavDropdown.Item>
+            </NavDropdown>
+            <Nav.Link href="#" disabled>
+              Link
+            </Nav.Link> */}
+          </Nav>
+          {/* <Form className="d-flex">
+            <Form.Control
+              type="search"
+              placeholder="Search"
+              className="me-2"
+              aria-label="Search"
+            />
+            <Button variant="outline-success" className="flex-1">
+              Book Now
             </Button>
-            <Menu
-              anchorEl={anchorEl}
-              open={isOpen}
-              onClose={handleClose}
-              anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-            >
-              <MenuItem onClick={handleLogOut}>Log Out</MenuItem>
-            </Menu>
-          </FlexBetween>
-        </FlexBetween>
-      </Toolbar>
-    </AppBar>
+          </Form> */}
+          <Nav
+            className="my-2 my-lg-0 justify-content-end gap-3"
+            style={{ maxHeight: "100px" }}
+            navbarScroll
+          >
+            {/* <Nav.Link href="#action1">Home</Nav.Link>
+            <Nav.Link href="#action2">Link</Nav.Link> */}
+            <Button variant="outline-success" href="/login" className="">
+              Log In
+            </Button>
+            <Button variant="success">Book now</Button>
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   );
 };
 
-export default Navbar;
+export default NavBar;
