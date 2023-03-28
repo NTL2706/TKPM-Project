@@ -1,20 +1,25 @@
 import React from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import heroImage from "../../assets/img/hero.png";
+import OurPitches from "../../components/OurPitches";
 
 const HomePage = () => {
   return (
     <div className="w-full">
-      {/* <img src={heroImage} alt="Hero Image" width="100%" /> */}
+      {/* HERO SECTION */}
       <div className="hero-container">
         <div className="hero-content px-3 container">
           <div className="hero-text p-5 bg-light rounded-4 bg-opacity-50 color-green">
             <h1>Rent Futsal Pitches Online</h1>
-            <p>Find and book your perfect futsal pitch online, hassle-free.</p>
+            <p className="fs-5 pt-2 pb-1">
+              Find and book your perfect futsal pitch online, hassle-free.
+            </p>
             <Button variant="success">Book Now</Button>
           </div>
         </div>
       </div>
+
+      {/* OUR PITCHES */}
+      <OurPitches />
       {/* <Container>
         <Row>
           <Col>
