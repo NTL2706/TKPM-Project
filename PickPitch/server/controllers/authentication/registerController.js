@@ -1,4 +1,4 @@
-const Owner = require("../../../../Owner/models/Owner");
+const Owner = require("../../models/Owner");
 
 function getRegister(req, res) {
   res.render("authentication/register/register", { layout: false });

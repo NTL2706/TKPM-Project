@@ -31,7 +31,7 @@ const Pitch = new Schema(
       default: false,
     },
   },
-  { collection: "product" }
+  { collection: "pitch" }
 );
 
-module.exports = mongoose.model("Pitch", Product);
+module.exports = mongoose.model("Pitch", Pitch);

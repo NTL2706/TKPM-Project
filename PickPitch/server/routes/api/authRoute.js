@@ -2,7 +2,7 @@
 const registerAPI = require("../../api/auth/register");
 const loginAPI = require("../../api/auth/login");
 
-authAPI.post("/auth/login",loginAPI.login);
-authAPI.post("/auth/register",registerAPI.register);
+authAPI.post("/login", loginAPI.login);
+authAPI.post("/register", registerAPI.register);
 
 module.exports = authAPI;
