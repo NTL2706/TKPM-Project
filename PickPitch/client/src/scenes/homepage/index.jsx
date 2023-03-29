@@ -1,11 +1,18 @@
 import React, { useEffect } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
+import { useSelector } from "react-redux";
 import OurPitches from "../../components/OurPitches";
 
 const HomePage = () => {
   // const [pitches, setPitches] = useState(null);
+  const token = useSelector((state) => state.global.token);
+  const user = useSelector((state) => state.global.user);
 
   // useEffect{() => {}, []}
+  useEffect(() => {
+    console.log("Token:", token);
+    console.log("user:", user);
+  }, [token]);
 
   return (
     <div className="w-full">

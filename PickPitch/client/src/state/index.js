@@ -14,6 +14,7 @@ export const globalSlice = createSlice({
       state.mode = state.mode === "light" ? "dark" : "light";
     },
     setLogin: (state, action) => {
+      // console.log("action:", action.payload);
       state.user = action.payload.user;
       state.token = action.payload.token;
     },

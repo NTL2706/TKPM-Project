@@ -62,7 +62,7 @@ const Login = () => {
         password: req.get("password"),
       })
       .then((res) => {
-        console.log("res", res);
+        console.log("res", res.data.token);
         dispatch(
           setLogin({
             user: res.data.user,
@@ -72,8 +72,6 @@ const Login = () => {
         navigate("/");
       })
       .catch((err) => console.log(err));
-
-    const data = await response.json();
 
     // if (data.user) {
     //   dispatch(
