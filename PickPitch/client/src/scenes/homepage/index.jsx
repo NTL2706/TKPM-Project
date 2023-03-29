@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import OurPitches from "../../components/OurPitches";
 
 const HomePage = () => {
+  const [pitches, setPitches] = useState(null);
+
+  // useEffect{() => {}, []}
+
   return (
     <div className="w-full">
       {/* HERO SECTION */}

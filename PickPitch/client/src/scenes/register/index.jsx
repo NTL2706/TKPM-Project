@@ -57,7 +57,7 @@ const Register = () => {
     // });
 
     const response = await axios
-      .post("/auth/login", {
+      .post("http://localhost:5000/api/auth/register", {
         email: req.get("email"),
 
         password: req.get("password"),
