@@ -6,6 +6,7 @@ import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
 import { themeSettings } from "./theme";
 import Students from "./scenes/students";
 import Login from "./scenes/login";
+import Register from "./scenes/register";
 import HomePage from "./scenes/homepage";
 import NavBar from "./components/Navbar";
 
@@ -23,6 +24,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
             <Route
               path="/students"
               element={isAuth ? <Students /> : <Navigate to="/login" />}

@@ -37,7 +37,7 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-const Login = () => {
+const Register = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -59,7 +59,10 @@ const Login = () => {
     const response = await axios
       .post("/auth/login", {
         email: req.get("email"),
+
         password: req.get("password"),
+        user_name: req.get("username"),
+        phone: req.get("phone"),
       })
       .then((res) => {
         console.log("res", res);
@@ -69,7 +72,7 @@ const Login = () => {
             token: res.data.token,
           })
         );
-        navigate("/students");
+        navigate("/");
       })
       .catch((err) => console.log(err));
 
@@ -148,7 +151,7 @@ const Login = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs" sx={{ height: 100 }}>
+      <Container component="main" maxWidth="xs" sx={{ height: 50 }}>
         <CssBaseline />
         <Box
           sx={{
@@ -164,7 +167,7 @@ const Login = () => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Sign up
           </Typography>
           <Box
             component="form"
@@ -180,6 +183,26 @@ const Login = () => {
               label="Email Address"
               name="email"
               autoComplete="email"
+              autoFocus
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="username"
+              label="User's name"
+              name="username"
+              autoComplete="current-username"
+              autoFocus
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="phone"
+              label="User's phone"
+              name="phone"
+              autoComplete="current-phone"
               autoFocus
             />
             <TextField
@@ -202,10 +225,10 @@ const Login = () => {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Sign Up
             </Button>
             <Typography component="h1" variant="h5">
-              Don't have an account? <Link href="/register">Register</Link>
+              Have an account? <Link href="/login">Login in now</Link>
             </Typography>
           </Box>
         </Box>
@@ -215,4 +238,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
