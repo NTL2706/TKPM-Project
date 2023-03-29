@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const exphbs = require("express-handlebars");
 const expressHandlebarsSections = require("express-handlebars-sections");
 const session = require("express-session");
+const cors = require("cors");
 
 // Setup variable
 const env = require("./configs/envConfigs");
@@ -25,6 +26,9 @@ const hbs = exphbs.create({
 // register `hbs.engine` with the Express app.
 // setup view engine
 app.use(express.static(path.join(__dirname, "/public")));
+
+// CORS
+app.use(cors());
 
 expressHandlebarsSections(hbs);
 app.engine("hbs", hbs.engine);
@@ -83,5 +87,5 @@ if (PORT == null || PORT == "") {
 }
 
 app.listen(PORT, function () {
-  console.log("Server has started successfully");
+  console.log("Server has started successfully", PORT);
 });

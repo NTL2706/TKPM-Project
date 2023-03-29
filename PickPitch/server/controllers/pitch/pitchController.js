@@ -20,7 +20,7 @@ async function postAddPitch(req, res) {
   const files = await uploadImg.uploadFile(req, res);
   if (files.length > 0) {
     for (let file of files) {
-      listImg.push(file);
+      listImg.push(file.filename);
     }
   }
 

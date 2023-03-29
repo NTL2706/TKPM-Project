@@ -57,7 +57,7 @@ const Login = () => {
     // });
 
     const response = await axios
-      .post("/auth/login", {
+      .post("http://localhost:5000/api/auth/login", {
         email: req.get("email"),
         password: req.get("password"),
       })
@@ -69,7 +69,7 @@ const Login = () => {
             token: res.data.token,
           })
         );
-        navigate("/students");
+        navigate("/");
       })
       .catch((err) => console.log(err));
 
