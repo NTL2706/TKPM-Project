@@ -3,7 +3,7 @@ import { Container, Row, Col, Button } from "react-bootstrap";
 import OurPitches from "../../components/OurPitches";
 
 const HomePage = () => {
-  const [pitches, setPitches] = useState(null);
+  // const [pitches, setPitches] = useState(null);
 
   // useEffect{() => {}, []}
 
