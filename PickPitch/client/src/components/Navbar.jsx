@@ -22,6 +22,7 @@ import {
 } from "@mui/material";
 
 import { Button, Container, Nav, Navbar } from "react-bootstrap";
+import { ToastContainer, toast } from "react-toastify";
 
 import profileImage from "../assets/img/profile.jpeg";
 import logoImage from "../assets/img/logo.png";
@@ -39,13 +40,29 @@ const NavBar = () => {
     setAnchorEl(null);
   };
   const handleLogOut = () => {
+    toast.success("Log out success!", {
+      position: toast.POSITION.TOP_CENTER,
+      theme: "colored",
+      autoClose: 2000,
+      hideProgressBar: false,
+    });
     setAnchorEl(null);
     dispatch(setLogout());
   };
 
   if (!user) {
     return (
-      <Navbar bg="light" expand="lg">
+      <Navbar
+        bg="light"
+        expand="lg"
+        className="shadow-lg"
+        style={{
+          position: "fixed",
+          top: 0,
+          width: "100%",
+          zIndex: 1,
+        }}
+      >
         <Container fluid className="container">
           <Navbar.Brand href="/">
             <img src={logoImage} alt="Bootstrap" height="50" />
@@ -76,7 +93,9 @@ const NavBar = () => {
               <Button variant="outline-success" href="/login" className="">
                 Log In
               </Button>
-              <Button variant="success">Book now</Button>
+              <Button variant="success" href="/booking">
+                Book now
+              </Button>
             </Nav>
           </Navbar.Collapse>
         </Container>
@@ -84,7 +103,18 @@ const NavBar = () => {
     );
   } else {
     return (
-      <Navbar bg="light" expand="lg">
+      <Navbar
+        bg="light"
+        expand="lg"
+        className="shadow-lg"
+        style={{
+          position: "fixed",
+          top: 0,
+          width: "100%",
+          zIndex: 1,
+          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+        }}
+      >
         <Container fluid className="container">
           <Navbar.Brand href="/">
             <img src={logoImage} alt="Bootstrap" height="50" />
@@ -112,9 +142,6 @@ const NavBar = () => {
               style={{ maxHeight: "100px" }}
               navbarScroll
             >
-              {/* <Typography component="h1" variant="h5">
-                Welcome {user.user_name}
-              </Typography> */}
               <Button
                 variant="outline-success"
                 onClick={handleClick}
@@ -140,11 +167,6 @@ const NavBar = () => {
                   <Typography fontWeight="bold" fontSize="0.85rem">
                     Welcome {user.user_name}!
                   </Typography>
-                  {/* <Typography
-                  fontSize="0.75rem"
-                >
-                  {user.occupation}
-                </Typography> */}
                 </Box>
                 <ArrowDropDownOutlined
                   sx={{ color: "black", fontSize: "25px" }}
@@ -158,7 +180,9 @@ const NavBar = () => {
               >
                 <MenuItem onClick={handleLogOut}>Log Out</MenuItem>
               </Menu>
-              <Button variant="success">Book now</Button>
+              <Button variant="success" href="/booking">
+                Book now
+              </Button>
             </Nav>
           </Navbar.Collapse>
         </Container>

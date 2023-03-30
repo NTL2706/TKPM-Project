@@ -4,15 +4,8 @@ import { useSelector } from "react-redux";
 import OurPitches from "../../components/OurPitches";
 
 const HomePage = () => {
-  // const [pitches, setPitches] = useState(null);
   const token = useSelector((state) => state.global.token);
   const user = useSelector((state) => state.global.user);
-
-  // useEffect{() => {}, []}
-  useEffect(() => {
-    console.log("Token:", token);
-    console.log("user:", user);
-  }, [token]);
 
   return (
     <div className="w-full">
@@ -24,14 +17,18 @@ const HomePage = () => {
             <p className="fs-5 pt-2 pb-1">
               Find and book your perfect futsal pitch online, hassle-free.
             </p>
-            <Button variant="success">Book Now</Button>
+            <Button variant="success" href="/booking">
+              Book Now
+            </Button>
           </div>
         </div>
       </div>
 
       {/* OUR PITCHES */}
       <OurPitches />
-      {/* <Container>
+
+      {/* FEATURE & ABOUT US */}
+      <Container>
         <Row>
           <Col>
             <h2>Features</h2>
@@ -52,7 +49,7 @@ const HomePage = () => {
             </p>
           </Col>
         </Row>
-      </Container> */}
+      </Container>
     </div>
   );
 };

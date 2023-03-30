@@ -9,6 +9,8 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import { api } from "./state/api";
 
 import "bootstrap/dist/css/bootstrap.min.css";
+import "react-toastify/dist/ReactToastify.css";
+import "react-datepicker/dist/react-datepicker.css";
 
 const store = configureStore({
   reducer: {

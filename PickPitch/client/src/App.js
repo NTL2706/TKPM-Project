@@ -4,11 +4,12 @@ import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
 import { themeSettings } from "./theme";
-import Students from "./scenes/students";
+import NavBar from "./components/Navbar";
+
 import Login from "./scenes/login";
 import Register from "./scenes/register";
 import HomePage from "./scenes/homepage";
-import NavBar from "./components/Navbar";
+import BookingPage from "./scenes/booking";
 
 function App() {
   const mode = useSelector((state) => state.global.mode);
@@ -25,11 +26,12 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route
+            {/* <Route
               path="/students"
               element={isAuth ? <Students /> : <Navigate to="/login" />}
-            />
+            /> */}
             <Route path="/homepage" element={<HomePage />} />
+            <Route path="/booking" element={<BookingPage />} />
           </Routes>
         </ThemeProvider>
       </BrowserRouter>

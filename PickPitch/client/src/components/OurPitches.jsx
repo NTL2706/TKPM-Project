@@ -40,6 +40,8 @@ const venues = [
 ];
 
 const OurPitches = () => {
+  // FETCH PITCH
+
   return (
     <section id="our-venues">
       <Container>
@@ -61,7 +63,12 @@ const OurPitches = () => {
                 <Card.Body>
                   <Card.Title>{venue.name}</Card.Title>
                   <Card.Text>{venue.location}</Card.Text>
-                  <Button variant="outline-success">Book Now</Button>
+                  <div className="d-flex gap-3">
+                    <Button variant="outline-success">View Details</Button>
+                    <Button variant="success" className="ml-3" href="/booking">
+                      Book Now
+                    </Button>
+                  </div>
                 </Card.Body>
               </Card>
             </Col>
