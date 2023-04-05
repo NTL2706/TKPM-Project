@@ -116,6 +116,7 @@ const NavBar = () => {
         }}
       >
         <Container fluid className="container">
+          <ToastContainer />
           <Navbar.Brand href="/">
             <img src={logoImage} alt="Bootstrap" height="50" />
           </Navbar.Brand>

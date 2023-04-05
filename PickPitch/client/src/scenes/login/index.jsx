@@ -17,7 +17,6 @@ import { setLogin } from "../../state";
 import axios from "../../state/axios-instance";
 // import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
 
 function Copyright(props) {
   return (
@@ -145,7 +144,7 @@ const Login = () => {
             </Typography>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 2, mb: 4 }} />
+        <Copyright sx={{ mt: 2, mb: 2 }} />
       </Container>
     </ThemeProvider>
   );

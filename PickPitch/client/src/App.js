@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
 import { themeSettings } from "./theme";
 import NavBar from "./components/Navbar";
+import Footer from "./components/Footer";
 
 import Login from "./scenes/login";
 import Register from "./scenes/register";
@@ -33,6 +34,7 @@ function App() {
             <Route path="/homepage" element={<HomePage />} />
             <Route path="/booking" element={<BookingPage />} />
           </Routes>
+          {/* <Footer /> */}
         </ThemeProvider>
       </BrowserRouter>
     </div>

@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import DatePicker from "react-datepicker";
+import DatePicker, { CalendarContainer } from "react-datepicker";
+import Footer from "../../components/Footer";
+import PitchBooking from "../test";
+import DataTable from "../../components/ScheduleBooking";
 
 const BookingPage = () => {
   const token = useSelector((state) => state.global.token);
@@ -12,15 +15,25 @@ const BookingPage = () => {
   const oneWeekLater = new Date(
     currentDate.getTime() + 7 * 24 * 60 * 60 * 1000
   );
+  const MyContainer = ({ className, children }) => {
+    return (
+      <div style={{ padding: "0px", background: "#", color: "#fff" }}>
+        <CalendarContainer className={className}>
+          {/* <div style={{ background: "#f0f0f0" }}>Choose your date?</div> */}
+          <div style={{ position: "relative" }}>{children}</div>
+        </CalendarContainer>
+      </div>
+    );
+  };
 
   return (
     <div className="w-full">
       {/* HERO SECTION */}
       <div className="booking_banner-container">
         <div className="booking_banner-content">
-          <div className="hero-text p-5 bg-light rounded-4 bg-opacity-50 color-green">
+          <div className="hero-text p-3 px-3 bg-light rounded-4 bg-opacity-50 color-green">
             <h1>Book now</h1>
-            <p className="fs-5 pt-2 pb-1">
+            <p className="fs-5 pt-1 pb-1">
               Find and book your perfect futsal pitch online, hassle-free.
             </p>
           </div>
@@ -32,11 +45,10 @@ const BookingPage = () => {
 
       <div className="container d-flex flex-column justify-content-center mx-auto mt-5">
         {/* CHOOSE PITCH */}
-        <select
-          class="form-select form-select-lg mb-3 w-50 mx-auto"
-          aria-label=".form-select-lg example"
+        {/* <select
+          class="form-select form-select mb-3 w-50 mx-auto"
+          aria-label=".form-select example"
         >
-          {/* <option selected>Open this select menu</option> */}
           <option value="1" selected>
             SÂN VẬN ĐỘNG PHÚ THỌ
           </option>
@@ -44,10 +56,10 @@ const BookingPage = () => {
           <option value="3">HOÀNG KIM</option>
           <option value="4">KHÁNH HỘI</option>
           <option value="5">THỐNG NHẤT</option>
-        </select>
+        </select> */}
 
         {/* DATE PICKER */}
-        <div className="mt-3 d-flex justify-content-center">
+        {/* <div className="mt-3 d-flex justify-content-center">
           <DatePicker
             selected={startDate}
             onChange={(date) => setStartDate(date)}
@@ -55,33 +67,18 @@ const BookingPage = () => {
             maxDate={oneWeekLater}
             showDisabledMonthNavigation
             inline
+            calendarContainer={MyContainer}
           />
-        </div>
+        </div> */}
+
+        {/* SCHEDULE */}
+        {/* {startDate && <DataTable />} */}
+
+        {/* test */}
+        <PitchBooking />
       </div>
 
-      {/* FEATURE & ABOUT US */}
-      {/* <Container>
-        <Row>
-          <Col>
-            <h2>Features</h2>
-            <ul>
-              <li>Search for futsal pitches in your area</li>
-              <li>View pitch availability and prices</li>
-              <li>Book and pay for pitches online</li>
-              <li>Rate and review pitches you have played on</li>
-            </ul>
-          </Col>
-          <Col>
-            <h2>About Our Pitches</h2>
-            <p>
-              Our futsal pitches are top quality and maintained to a high
-              standard. We offer a variety of pitch sizes and surfaces to suit
-              your needs, from beginner to professional level. Book now and
-              experience the best futsal pitches in town.
-            </p>
-          </Col>
-        </Row>
-      </Container> */}
+      <Footer />
     </div>
   );
 };
