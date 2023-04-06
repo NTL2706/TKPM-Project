@@ -14,8 +14,9 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLogin } from "../../state";
-// import axios from "../../state/axios-instance";
-import axios from "axios";
+import axios from "../../state/axios-instance";
+// import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 
 function Copyright(props) {
   return (
@@ -45,111 +46,45 @@ const Login = () => {
     event.preventDefault();
     const req = new FormData(event.currentTarget);
 
-    // const response = await fetch("http://localhost:3001/auth/login", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     email: req.get("email"),
-    //     password: req.get("password"),
-    //   }),
-    // });
-
     const response = await axios
-      .post("http://localhost:5000/api/auth/login", {
+      .post("/api/auth/login", {
         email: req.get("email"),
         password: req.get("password"),
       })
       .then((res) => {
-        console.log("res", res);
+        toast.success("Login successful!", {
+          position: toast.POSITION.TOP_CENTER,
+          theme: "colored",
+          autoClose: 1500,
+          hideProgressBar: false,
+        });
         dispatch(
           setLogin({
             user: res.data.user,
             token: res.data.token,
           })
         );
-        navigate("/");
+        setTimeout(() => navigate("/"), 2500);
       })
-      .catch((err) => console.log(err));
-
-    const data = await response.json();
-
-    // if (data.user) {
-    //   dispatch(
-    //     setLogin({
-    //       user: data.user,
-    //       token: data.token,
-    //     })
-    //   );
-    //   navigate("/students");
-    // } else {
-    //   alert("Please check your username and password");
-    // }
+      .catch((err) => {
+        toast.error(
+          "Login unsuccessful! Please check your email and password again",
+          {
+            position: toast.POSITION.TOP_CENTER,
+            theme: "colored",
+            autoClose: 3500,
+            hideProgressBar: false,
+          }
+        );
+        // console.log("lÔI R!!", err);
+      });
   };
-
-  // const handleSubmit = async (event) => {
-  //   event.preventDefault();
-  //   const req = new FormData(event.currentTarget);
-
-  //   const user = JSON.stringify({
-  //     email: req.get("email"),
-  //     password: req.get("password"),
-  //   });
-
-  //   // const response = await axios.post("/auth/login", user);
-
-  //   const response = await fetch("http://localhost:3001/auth/login", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       email: req.get("email"),
-  //       password: req.get("password"),
-  //     }),
-  //   });
-
-  //   console.log("res:", response.json());
-
-  //   // axios
-  //   //     .post("/student/add", newRow)
-  //   //     .then((res) => {
-  //   //       setRows(rows.filter((row) => row._id !== newRow._id));
-  //   //       setRows((oldRows) => [...oldRows, res.data]);
-  //   //     })
-  //   //     .catch((err) => console.log(err));
-
-  //   //
-  //   // const response = await axios.post(API_URL + 'login', userData)
-
-  //   // if (response.data) {
-  //   //   localStorage.setItem('user', JSON.stringify(response.data))
-  //   // }
-
-  //   // return response.data
-
-  //   //
-
-  //   const data = await response.json();
-
-  //   if (data.user) {
-  //     dispatch(
-  //       setLogin({
-  //         user: data.user,
-  //         token: data.token,
-  //       })
-  //     );
-  //     navigate("/students");
-  //   } else {
-  //     alert("Please check your username and password");
-  //   }
-  // };
 
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs" sx={{ height: 100 }}>
         <CssBaseline />
+        <ToastContainer />
         <Box
           sx={{
             marginTop: 0,
@@ -209,7 +144,7 @@ const Login = () => {
             </Typography>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 2, mb: 4 }} />
+        <Copyright sx={{ mt: 2, mb: 2 }} />
       </Container>
     </ThemeProvider>
   );

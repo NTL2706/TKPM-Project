@@ -29,3 +29,24 @@ body,
     /* color: white; */
     /* margin-left: 30px; */
 }
+
+.booking_banner-container {
+    background: url('./assets/img/hero.png') center center/cover;
+    height: 30vh;
+    width: 100%;
+    display: flex;
+    object-fit: contain;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 70px;
+}
+
+.booking_banner-content {
+    width: fit-content;
+    text-align: center;
+}
+
+.react-datepicker__day {
+    margin: 10px;
+}
