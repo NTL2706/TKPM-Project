@@ -4,7 +4,7 @@ const schema = mongoose.Schema;
 const Category = new schema(
   {
     name: { type: String, maxlength: 255 },
-    listIdPitch: [{ type: schema.Types.ObjectId }],
+    list_id_pitch: [{ type: schema.Types.ObjectId }],
 
     // tracking information
     create_at: {
@@ -19,7 +19,7 @@ const Category = new schema(
       update_content: {
         type: String,
         maxlength: 255,
-        default: "create account",
+        default: "create category",
       },
     },
     is_delete: {
@@ -27,7 +27,7 @@ const Category = new schema(
       default: false,
     },
   },
-  { collection: "owner" }
+  { collection: "category" }
 );
 
 module.exports = mongoose.model("Category", Category);
