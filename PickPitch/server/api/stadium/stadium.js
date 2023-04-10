@@ -36,7 +36,7 @@ async function getStadium(req, res) {
 
     stadium.image = env.urlImg + stadium.image;
     stadium.list_image = stadium.list_image.map((img) => env.urlImg + img);
-
+    
     res.status(200).json({ stadium });
   } catch (err) {
     console.log(err);
