@@ -1,10 +1,14 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const schema = mongoose.Schema;
 
-const Comment = new Schema(
+const Price = new schema(
   {
-    comment: { type: String, maxlength: 1000 },
-    user_id: { type: Schema.Types.ObjectId },
+    is_daytime: { type: Boolean },
+    start_time: { type: Date },
+    end_time: { type: Date },
+    price: { type: Number },
+    id_stadium: { type: schema.Types.ObjectId },
+
     // tracking information
     create_at: {
       type: Date,
@@ -18,7 +22,7 @@ const Comment = new Schema(
       update_content: {
         type: String,
         maxlength: 255,
-        default: "create comment",
+        default: "create price",
       },
     },
     is_delete: {
@@ -26,7 +30,7 @@ const Comment = new Schema(
       default: false,
     },
   },
-  { collection: "comment" }
+  { collection: "price" }
 );
 
-module.exports = mongoose.model("Comment", Comment);
+module.exports = mongoose.model("Price", Price);

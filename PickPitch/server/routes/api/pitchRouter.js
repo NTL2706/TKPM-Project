@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const pitchAPI = require("../../api/pitch/pitch");
+const pitchAPI = require("../../api/stadium/pitch");
 
 router.get("/", pitchAPI.getPitchs);
 router.get("/:idPitch", pitchAPI.getPitch);

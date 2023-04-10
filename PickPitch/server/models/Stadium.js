@@ -1,11 +1,15 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const schema = mongoose.Schema;
 
-const Pitch = new Schema(
+const Stadium = new schema(
   {
     name: { type: String, maxlength: 255 },
-    category: { type: String, maxlength: 255 },
-    stadium_id: { type: Schema.Types.ObjectId },
+    image: { type: String },
+    list_image: [],
+    details: { type: String },
+    address: { type: String, maxlength: 500 },
+    list_id_pitch: [{ type: schema.Types.ObjectId }],
+    ratting: { type: Number, default: 0 },
 
     // tracking information
     create_at: {
@@ -20,7 +24,7 @@ const Pitch = new Schema(
       update_content: {
         type: String,
         maxlength: 255,
-        default: "create pitch",
+        default: "create stadium",
       },
     },
     is_delete: {
@@ -28,7 +32,7 @@ const Pitch = new Schema(
       default: false,
     },
   },
-  { collection: "pitch" }
+  { collection: "stadium" }
 );
 
-module.exports = mongoose.model("Pitch", Pitch);
+module.exports = mongoose.model("Stadium", Stadium);

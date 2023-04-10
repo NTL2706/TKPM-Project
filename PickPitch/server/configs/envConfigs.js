@@ -8,4 +8,5 @@ module.exports = {
   imgBucket: process.env.IMG_BUCKET,
   port: process.env.PORT,
   salt: process.env.SALT,
+  urlImg: process.env.URL_IMG,
 };
