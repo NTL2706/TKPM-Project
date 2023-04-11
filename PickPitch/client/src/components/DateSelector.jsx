@@ -12,6 +12,11 @@ const DateSelector = ({ onDateChange }) => {
     onDateChange(date);
   };
 
+  const currentDate = new Date();
+  const oneWeekLater = new Date(
+    currentDate.getTime() + 30 * 24 * 60 * 60 * 1000
+  );
+
   return (
     <div className="d-flex flex-column align-items-center">
       {/* <h1>Select a date</h1> */}
@@ -20,6 +25,8 @@ const DateSelector = ({ onDateChange }) => {
           selected={startDate}
           onChange={(date) => handleSelect(date)}
           inline
+          minDate={currentDate}
+          maxDate={oneWeekLater}
         />
       </div>
       {/* <div className="confirm-btn" style={{ marginTop: "16px" }}>
