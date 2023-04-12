@@ -12,10 +12,8 @@ import {
   TextField,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-// import { CancelIcon, DeleteIcon } from "@mui/icons-material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-// import CancelIcon from '@mui/icons-material/Cancel';
 import DateSelector from "../../components/DateSelector";
 
 // {
@@ -37,7 +35,7 @@ import DateSelector from "../../components/DateSelector";
 //       { time: "9pm-10pm", price: "500.000 VND", booked: false },
 //     ],
 //     [
-//       { time: "8am-9am", price: "300.000 VND", pitch1: false, pitch2: false },
+//       { time: "8am-9am", price: "300.000 VND", pitch1: false },
 //       { time: "9am-10am", price: "300.000 VND", booked: false },
 //       { time: "10am-11am", price: "300.000 VND", booked: false },
 //       { time: "11am-12pm", price: "300.000 VND", booked: false },
@@ -54,6 +52,34 @@ import DateSelector from "../../components/DateSelector";
 //     ];
 // }
 
+// Api req postbooking
+// {
+//   [
+//     {
+//       pitch_id,
+//       time,
+//       price
+//     },
+//     {
+//       pitch_id,
+//       time ,
+//       price
+//     },
+//     {
+//       pitch_id,
+//       time ,
+//       price
+//     },
+//     {
+//       pitch_id,
+//       time ,
+//       price
+//     },
+//   ],
+//   total_price
+// }
+//
+
 // {
 //   stadium_id: '.asdjkha'
 // }
@@ -63,10 +89,11 @@ import DateSelector from "../../components/DateSelector";
 //   san7: true,
 // }
 
+// API REQ USER CHOOSE BOOKING TIME
 // {
 //   stadium_id,
 //   date,
-//   category: "san5",
+//   category: "san7",
 // }
 
 const rows = [
