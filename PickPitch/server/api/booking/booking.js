@@ -2,31 +2,40 @@
 const TimeBooking = require("../../models/TimeBooking");
 const Ticket = require("../../models/Ticket");
 const booking = {
-  getBooking: async (req, res) => {
-    
-    
-  },
+  postBooking: async (req, res) => {
+    const informationTicket = req.body.informationTicket;
 
-  postBooking: async (req,res)=>{
-    const {pitchID} = req.body;
-    
     try {
-     
-        const createTicket = new Ticket({
-            pitch_id: pitchID,
-            price:  price,
-        })
-
-        await createTicket.save();
-        for (let i = 0; i < pitchID.length;i++){
-            TimeBooking
+      const pitchs = [];
+      const temp ={};
+      for (let i = 0; i < informationTicket.length; i++) {
+        const { pitch_id,time,price } = informationTicket[i];
+        temp.pitch_id = pitch_id;
+        temp.time = time;
+        temp.price = price;
+        if (!pitchs.includes(pitch_id)) {
+          pitchs.push(temp);
         }
+        else{
+          pitchs.push(temp);
+        }
+      }
 
-        console.log(await pub.pubSubChannels())
-        await pub.configSet("notify-keyspace-events", "Ex");
-        await pub.setEx(String(count), 5, "hello");
-        
+      
+      const createTicket = new Ticket({
+        pitch_id: pitchID,
+        price: price,
+      });
+
+      await createTicket.save();
+      for (let i = 0; i < pitchID.length; i++) {
+        TimeBooking;
+      }
+
+      await pub.configSet("notify-keyspace-events", "Ex");
+      await pub.setEx(String(count), 5, "hello");
     } catch (err) {}
-  } 
-  
+  },
 };
+
+module.exports = booking;

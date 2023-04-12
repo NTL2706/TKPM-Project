@@ -8,26 +8,10 @@ const TicketSchema = new Schema({
     time:[Number],
     price:Number,
     is_delete: Boolean,
-    is_paid: false,
+    is_paid: Boolean,
 },{collection:"Ticket"})
 
 const TicketModel = mongoose.model("Ticket", TicketSchema);
 
 module.exports = TicketModel;
 
-{
-    pitch_id:
-    time:
-}
-{
-    pitch_id:
-    time:
-}
-{
-    pitch_id:
-    time:
-}
-{
-    pitch_id:
-    time:
-}

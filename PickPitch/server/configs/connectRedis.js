@@ -1,10 +1,10 @@
 ﻿const redis = require("redis");
-
+const env = require("../configs/envConfigs");
 let connect_redis = {
-  password: process.env.REDIS_PASSWORD,
+  password: env.REDIS_PASSWORD,
   socket: {
-    host: process.env.REDIS_HOSTNAME,
-    port: process.env.REDIS_PORT,
+    host: env.REDIS_HOSTNAME,
+    port: env.REDIS_PORT,
   },
 };
 
