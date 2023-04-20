@@ -65,7 +65,13 @@ const OurPitches = () => {
                   <Card.Text>{venue.location}</Card.Text>
                   <div className="d-flex gap-3">
                     <Button variant="outline-success">View Details</Button>
-                    <Button variant="success" className="ml-3" href="/booking">
+                    <Button
+                      variant="success"
+                      className="ml-3"
+                      href={`/booking?stadium=${encodeURIComponent(
+                        venue.name
+                      )}`}
+                    >
                       Book Now
                     </Button>
                   </div>

@@ -8,7 +8,7 @@ const registerAPI = {
       const checkUser = await User.findOne({ email: req.body.email });
       if (checkUser)
       { 
-        return res.json({message:"user is existed"});
+        return res.status(400).json({message:"user is existed"});
       }
 
       const email = req.body.email;
