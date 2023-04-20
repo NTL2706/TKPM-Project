@@ -6,6 +6,15 @@ function stringToDate(strTime, type) {
   return moment(strTime, type).toDate();
 }
 
+function mergeDateTime(date, time) {
+  const [hours, minutes] = time.split(":");
+  const newDate = new Date(date);
+  newDate.setUTCHours(hours); // đặt giờ theo múi giờ UTC
+  newDate.setUTCMinutes(minutes); // đặt phút theo múi giờ UTC
+  return newDate;
+}
+
 module.exports = {
   stringToDate,
+  mergeDateTime,
 };
