@@ -3,37 +3,99 @@ const TimeBooking = require("../../models/TimeBooking");
 const Ticket = require("../../models/Ticket");
 const booking = {
   postBooking: async (req, res) => {
-    const informationTicket = req.body.informationTicket;
+    //Example
+    /*
+    INPUT:
+    information_ticket = {
+      [
+      {
+        pitch_id:...,
+        time: ,
+      }
+      {
+        pitch_id:...,
+        time,
+      }
+      ],
 
+      total:...
+    }
+    
+    because input maybe have a lot of duplicate pitch_id
+    {
+      pitch_id:1
+      time 6am
+    }
+    {
+      pitch_id:1
+      time: 7am
+    }
+    ===>
+    PITCHS =[
+      {
+        pitch_id:1
+        time:[6am, 7am]
+      }
+      {
+        pitch_id:2
+        time:[6am, 7am]
+      }
+    ]
+    */
+    const informationTicket = req.body.information_ticket;
+    const totalPrice = req.body.total;
     try {
       const pitchs = [];
-      const temp ={};
-      for (let i = 0; i < informationTicket.length; i++) {
-        const { pitch_id,time,price } = informationTicket[i];
-        temp.pitch_id = pitch_id;
-        temp.time = time;
-        temp.price = price;
-        if (!pitchs.includes(pitch_id)) {
-          pitchs.push(temp);
-        }
-        else{
-          pitchs.push(temp);
+      
+      for (let i of informationTicket){
+        let check = array.find(element =>{
+          if (element.pitch_id == i.pitch_id){
+            element.time += "," + i.time;
+            return true;
+          }
+          return false;
+        })
+
+        if(check == undefined){
+          pitchs.push(i);
         }
       }
+      // for (let i = 0; i < informationTicket.length; i++) {
+      //   const temp ={};
+      //   const {pitch_id,time,price} = informationTicket[i];
+      //   temp.pitch_id = pitch_id;
+      //   temp.time = time;
+      //   temp.price = price;
+        
+      //   let check = pitchs.find(element =>{
+      //     if (element.pitch_id){
 
-      
+      //     }
+      //   })
+      // }
+
       const createTicket = new Ticket({
-        pitch_id: pitchID,
-        price: price,
+        pitchs: pitchs,
+        price:totalPrice,
+        is_delete: false,
+        not_paid: true,
+        total: totalPrice,
       });
 
-      await createTicket.save();
-      for (let i = 0; i < pitchID.length; i++) {
-        TimeBooking;
-      }
-
-      await pub.configSet("notify-keyspace-events", "Ex");
-      await pub.setEx(String(count), 5, "hello");
+      createTicket.save().then(async(data)=>{
+        for (let i = 0; i < data.length; i++){
+          let timeofpitchs = data[i].time.split(",");
+          for (let j = 0; j < timeofpitchs.length;j++){
+            const booking_time = new TimeBooking({
+              time: timeofpitchs[j],
+              pitch_id: data[i].pitch_id
+            })
+            await booking_time.save();
+          }
+        }
+        await pub.configSet("notify-keyspace-events", "Ex");
+        await pub.setEx(String(data._id), 5, "hello");
+      });
     } catch (err) {}
   },
 };

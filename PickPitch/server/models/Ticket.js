@@ -2,13 +2,11 @@
 const Schema = mongoose.Schema;
 
 const TicketSchema = new Schema({
-    pitch_id: [{
-        type:mongoose.Schema.Types.ObjectId
-    }],
-    time:[Number],
+    pitchs:[Object],
     price:Number,
     is_delete: Boolean,
-    is_paid: Boolean,
+    not_paid: Boolean,
+    total: Number,
 },{collection:"Ticket"})
 
 const TicketModel = mongoose.model("Ticket", TicketSchema);
