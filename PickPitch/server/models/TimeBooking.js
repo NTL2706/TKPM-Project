@@ -7,8 +7,7 @@ const TimeBooking = new Schema(
     time: { type: Date },
     pitch_id: { type: Schema.Types.ObjectId },
   },
-  { collection: "time_booking" }
-
+  { collection: "timeBooking" }
 );
 
 module.exports = mongoose.model("TimeBooking", TimeBooking);

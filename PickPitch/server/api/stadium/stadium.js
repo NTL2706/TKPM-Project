@@ -1,4 +1,5 @@
 const Stadium = require("../../models/Stadium");
+const Pitch = require("../../models/Pitch");
 const env = require("../../configs/envConfigs");
 
 async function getAllStadium(req, res) {
@@ -44,7 +45,33 @@ async function getStadium(req, res) {
   }
 }
 
+async function getCategory(req, res) {
+  const stadiumId = req.params.id_stadium;
+  let check1 = false;
+  let check2 = false;
+  try {
+    const san5 = await Pitch.count({
+      stadium_id: stadiumId,
+      category: "San5",
+    });
+
+    const san7 = await Pitch.count({
+      stadium_id: stadiumId,
+      category: "San7",
+    });
+
+    if (san5 > 0) check1 = true;
+    if (san7 > 0) check2 = true;
+
+    return res.status(404).json({ san5: check1, san7: check2 });
+  } catch (err) {
+    console.log(err);
+    return res.status(404).json({ err: "Error server witch " + err });
+  }
+}
+
 module.exports = {
   getAllStadium,
   getStadium,
+  getCategory,
 };

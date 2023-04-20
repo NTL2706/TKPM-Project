@@ -1,5 +1,4 @@
-require("./configs/connectRedis");
-// Import library
+//TODO Import library
 const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
