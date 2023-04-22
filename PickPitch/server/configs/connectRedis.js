@@ -10,8 +10,8 @@ let connect_redis = {
 
 let pub, sub;
 
-pub = redis.createClient(connect_redis);
-sub = redis.createClient(connect_redis);
+pub = redis.createClient();
+sub = redis.createClient();
 
 pub.connect();
 sub.connect();
@@ -25,7 +25,7 @@ sub.on("connect", () => {
 });
 
 sub.subscribe("__keyevent@0__:expired", async (message, channel) => {
-    console.log(message)
+  console.log(message);
 });
 
-module.exports = {pub,sub};
+module.exports = { pub, sub };

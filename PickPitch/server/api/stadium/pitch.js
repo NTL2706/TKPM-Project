@@ -76,10 +76,9 @@ async function updateTimeSlots(pitchId, timeSlots, date) {
 async function getCategory(req, res) {
   const stadiumId = req.params.id_stadium;
   const category = req.params.category;
-  const date = req.body.date;
+  const date = new Date(req.body.date);
+  console.log(date, stadiumId, category);
   date.setUTCHours(0, 0, 0, 0);
-
-  console.log(date);
 
   try {
     let pitches = await Pitch.find(

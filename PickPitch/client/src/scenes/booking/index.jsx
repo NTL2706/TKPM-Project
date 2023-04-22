@@ -5,6 +5,7 @@ import DatePicker, { CalendarContainer } from "react-datepicker";
 import Footer from "../../components/Footer";
 import PitchBooking from "../test";
 import DataTable from "../../components/ScheduleBooking";
+import axios from "../../state/axios-instance";
 
 // TEST
 import {
@@ -21,9 +22,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import DateSelector from "../../components/DateSelector";
 import { useLocation } from "react-router-dom";
-import { array } from "prop-types";
 
 const rows = [
   { index: 1, time: "8am-9am", price: "300.000", booked: false },
@@ -50,12 +49,14 @@ const sampleData = [
 ];
 
 const BookingPage = () => {
+  const [stadiums, setStadiums] = useState([]);
   const token = useSelector((state) => state.global.token);
   const user = useSelector((state) => state.global.user);
 
   /*  ADD PART */
   const [schedule, setSchedule] = useState([]);
   const [selectedStadium, setSelectedStadium] = useState("");
+  const [categories, setCategories] = useState([true, true]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [informationTicket, setInformationTicket] = useState([]);
   const location = useLocation();
@@ -71,6 +72,14 @@ const BookingPage = () => {
     Array(numberOfButtons).fill(false)
   );
 
+  //load stadium
+  useEffect(() => {
+    axios
+      .get("/api/stadium")
+      .then((res) => setStadiums(res.data))
+      .catch((err) => console.log(err));
+  }, []);
+
   // get stadium choice
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -83,9 +92,17 @@ const BookingPage = () => {
   // Fetch Category of Stadium
   useEffect(() => {
     if (selectedStadium !== "") {
-      // console.log("fetch API stadium:", selectedStadium);
+      console.log("fetch API stadium:", selectedStadium);
+      axios
+        .get(`/api/stadium/${selectedStadium}/category`)
+        .then((res) => setCategories(res.data))
+        .catch((err) => console.log(err));
     }
   }, [selectedStadium]);
+
+  useEffect(() => {
+    console.log("cate:", categories);
+  }, [categories]);
 
   useEffect(() => {
     setSchedule(rows);
@@ -169,35 +186,28 @@ const BookingPage = () => {
             value={selectedStadium}
             onChange={(e) => setSelectedStadium(e.target.value)}
           >
-            {/* <option selected>Open this select menu</option> */}
-            <option value="SÂN VẬN ĐỘNG PHÚ THỌ">SÂN VẬN ĐỘNG PHÚ THỌ</option>
-            <option value="NGUYỄN VĂN LINH">NGUYỄN VĂN LINH</option>
-            <option value="HOÀNG KIM">HOÀNG KIM</option>
-            <option value="KHÁNH HỘI">KHÁNH HỘI</option>
-            <option value="THỐNG NHẤT">THỐNG NHẤT</option>
+            {stadiums.map((stadium) => (
+              <option value={stadium._id} key={stadium._id}>
+                {stadium.name}
+              </option>
+            ))}
           </select>
 
           <select
             class="form-select form-select mb-3 w-50 mx-auto"
             aria-label=".form-select example"
           >
-            <option value="5" selected>
+            {/* <option value="5" selected>
               San 5
             </option>
-            <option value="7">San 7</option>
-            {/* <option value="4">KHÁNH HỘI</option>
-        <option value="5">THỐNG NHẤT</option> */}
+            <option value="7">San 7</option> */}
+            {categories[0] && (
+              <option value="5" selected>
+                San 5
+              </option>
+            )}
+            {categories[1] && <option value="7">San 7</option>}
           </select>
-          {/* <TextField
-        label="Select date"
-        type="date"
-        // class="mx-auto"
-        value={date.toISOString().substr(0, 10)}
-        onChange={handleDateChange}
-        InputLabelProps={{
-          shrink: true,
-        }}
-      /> */}
 
           {/* DATE SELECTOR */}
 
@@ -300,7 +310,11 @@ const BookingPage = () => {
               currency: "VND",
             })}
           </div>
-          <Button variant="outline-success" style={{ zIndex: 1 }}>
+          <Button
+            href="/bookingDetail"
+            variant="outline-success"
+            style={{ zIndex: 1 }}
+          >
             Book now
           </Button>
         </div>

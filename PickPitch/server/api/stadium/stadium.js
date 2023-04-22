@@ -37,7 +37,7 @@ async function getStadium(req, res) {
 
     stadium.image = env.urlImg + stadium.image;
     stadium.list_image = stadium.list_image.map((img) => env.urlImg + img);
-    
+
     res.status(200).json({ stadium });
   } catch (err) {
     console.log(err);
@@ -63,7 +63,7 @@ async function getCategory(req, res) {
     if (san5 > 0) check1 = true;
     if (san7 > 0) check2 = true;
 
-    return res.status(404).json({ san5: check1, san7: check2 });
+    return res.status(200).json({ san5: check1, san7: check2 });
   } catch (err) {
     console.log(err);
     return res.status(404).json({ err: "Error server witch " + err });

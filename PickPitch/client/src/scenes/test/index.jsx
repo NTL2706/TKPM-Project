@@ -35,7 +35,7 @@ import DateSelector from "../../components/DateSelector";
 //       { time: "9pm-10pm", price: "500.000 VND", booked: false },
 //     ],
 //     [
-//       { time: "8am-9am", price: "300.000 VND", pitch1: false },
+//       { time: "8am-9am", price: "300.000 VND", booked: false },
 //       { time: "9am-10am", price: "300.000 VND", booked: false },
 //       { time: "10am-11am", price: "300.000 VND", booked: false },
 //       { time: "11am-12pm", price: "300.000 VND", booked: false },
