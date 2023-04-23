@@ -30,21 +30,25 @@ sub.subscribe("__keyevent@0__:expired", async (message, channel) => {
   Ticket.findOne({
     _id: message,
   }).then(async (ticket) => {
+    
     if (ticket.not_paid) {
       ticket.pitchs.forEach(async (pitch) => {
+        console.log(pitch);
         pitch.time.split(",").forEach(async (TIME) => {
-          TimeBooking.find({
+          
+          TimeBooking.findOne({
             pitch_id: pitch.pitch_id,
-            time: new Date(TIME),
+            time: new Date(TIME).toISOString(),
           }).then(async (booking) => {
-            await TimeBooking.deleteOne({ _id: booking._id });
+            console.log(booking);
+            await TimeBooking.deleteOne({_id: booking._id });
           });
         });
       });
-      Ticket.updateOne({_id:ticket._id},{
-        is_delete:true,
-      })
     }
+    await Ticket.updateOne({_id:ticket._id},{
+      is_delete:true
+    })
   });
 });
 

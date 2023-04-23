@@ -5,7 +5,6 @@ const pitchRoute = require("./stadium/index");
 function route(app) {
   app.use("/auth", authnticaRoute);
   app.use("/api", apiRoute);
-
   app.use("/stadium", pitchRoute);
 }
 

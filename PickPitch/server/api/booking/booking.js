@@ -42,13 +42,15 @@ const booking = {
       }
     ]
     */
+   
     const informationTicket = req.body.information_ticket;
     const totalPrice = req.body.total;
+    
     try {
       const pitchs = [];
       
       for (let i of informationTicket){
-        let check = array.find(element =>{
+        let check = pitchs.find(element =>{
           if (element.pitch_id == i.pitch_id){
             element.time += "," + i.time;
             return true;
@@ -73,7 +75,7 @@ const booking = {
       //     }
       //   })
       // }
-
+      console.log(pitchs);
       const createTicket = new Ticket({
         pitchs: pitchs,
         price:totalPrice,
@@ -83,12 +85,12 @@ const booking = {
       });
 
       createTicket.save().then(async(data)=>{
-        for (let i = 0; i < data.length; i++){
-          let timeofpitchs = data[i].time.split(",");
+        for (let i = 0; i < data.pitchs.length; i++){
+          let timeofpitchs = data.pitchs[i].time.split(",");
           for (let j = 0; j < timeofpitchs.length;j++){
             const booking_time = new TimeBooking({
-              time: timeofpitchs[j],
-              pitch_id: data[i].pitch_id
+              time: new Date(timeofpitchs[j]).toISOString(),
+              pitch_id: data.pitchs[i].pitch_id
             })
             await booking_time.save();
           }
@@ -96,8 +98,12 @@ const booking = {
         await pub.configSet("notify-keyspace-events", "Ex");
         await pub.setEx(String(data._id), 5, "hello");
       });
+      res.status(200).json({
+        state: "successfully"
+      })
     } catch (err) {}
   },
+  
 };
 
 module.exports = booking;
