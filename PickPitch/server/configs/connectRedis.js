@@ -12,8 +12,8 @@ let connect_redis = {
 
 let pub, sub;
 
-pub = redis.createClient(connect_redis);
-sub = redis.createClient(connect_redis);
+pub = redis.createClient();
+sub = redis.createClient();
 
 pub.connect();
 sub.connect();
