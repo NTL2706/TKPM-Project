@@ -6,6 +6,7 @@ import Footer from "../../components/Footer";
 import PitchBooking from "../test";
 import DataTable from "../../components/ScheduleBooking";
 import axios from "../../state/axios-instance";
+import { PropagateLoader } from "react-spinners";
 
 // TEST
 import {
@@ -56,9 +57,13 @@ const BookingPage = () => {
   /*  ADD PART */
   const [schedule, setSchedule] = useState([]);
   const [selectedStadium, setSelectedStadium] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [categories, setCategories] = useState([true, true]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [informationTicket, setInformationTicket] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
+
   const location = useLocation();
 
   const [startDate, setStartDate] = useState(null);
@@ -117,9 +122,55 @@ const BookingPage = () => {
     console.log("information Ticket:", informationTicket);
   }, [informationTicket]);
 
+  useEffect(() => {
+    console.log("cate selected:", selectedCategory);
+  }, [selectedCategory]);
+
   const handleSelectDate = (date) => {
     setStartDate(date);
-    console.log("SEND API DATE:", date);
+    // console.log("Info send:", selectedStadium, selectedCategory, date);
+    // .get(`/api/stadium/643778507fa3d436c5abd3a5/category/San5`)
+    // axios
+    //   .get(`/api/stadium/${selectedStadium}/category/${selectedCategory}`, {
+    //     params: {
+    //       date: `${startDate}`,
+    //     },
+    //   })
+    //   .then((res) => console.log("TIME BOOKING:", res.data))
+    //   .catch((err) => console.log(err));
+    // console.log("SEND API DATE:", date);
+  };
+
+  // const handleGetBookingTime = () => {
+  //   console.log("Info send:", selectedStadium, selectedCategory, startDate);
+  //   axios
+  //     .get(`/api/stadium/${selectedStadium}/category/${selectedCategory}`, {
+  //       params: {
+  //         date: `${startDate}`,
+  //       },
+  //     })
+  //     .then((res) => console.log("TIME BOOKING:", res.data))
+  //     .catch((err) => console.log(err));
+  // };
+
+  const handleGetBookingTime = async () => {
+    console.log("Info send:", selectedStadium, selectedCategory, startDate);
+    setIsLoading(true);
+    try {
+      const res = await axios.get(
+        `/api/stadium/${selectedStadium}/category/${selectedCategory}`,
+        {
+          params: {
+            date: `${startDate}`,
+          },
+        }
+      );
+      console.log("TIME BOOKING:", res.data);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   function handleScheduleClick(slot) {
@@ -184,7 +235,10 @@ const BookingPage = () => {
             aria-label=".form-select example"
             id="stadium-select"
             value={selectedStadium}
-            onChange={(e) => setSelectedStadium(e.target.value)}
+            onChange={(e) => {
+              setSelectedStadium(e.target.value);
+              setSelectedCategory("");
+            }}
           >
             {stadiums.map((stadium) => (
               <option value={stadium._id} key={stadium._id}>
@@ -196,17 +250,15 @@ const BookingPage = () => {
           <select
             class="form-select form-select mb-3 w-50 mx-auto"
             aria-label=".form-select example"
+            id="category-select"
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
           >
-            {/* <option value="5" selected>
-              San 5
+            <option value="" disabled selected>
+              Select category
             </option>
-            <option value="7">San 7</option> */}
-            {categories[0] && (
-              <option value="5" selected>
-                San 5
-              </option>
-            )}
-            {categories[1] && <option value="7">San 7</option>}
+            {categories.San5 && <option value="San5">San 5</option>}
+            {categories.San7 && <option value="San7">San 7</option>}
           </select>
 
           {/* DATE SELECTOR */}
@@ -222,58 +274,67 @@ const BookingPage = () => {
                 maxDate={oneWeekLater}
               />
             </div>
-            {/* {
+            {
               <div className="confirm-btn" style={{ marginTop: "16px" }}>
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={() => onDateChange(startDate)}
+                  onClick={() => {
+                    setIsClicked(true);
+                    handleGetBookingTime();
+                  }}
                 >
                   Confirm
                 </Button>
               </div>
-            } */}
+            }
           </div>
 
+          {isLoading && <PropagateLoader color="#36d7b7" />}
+
           {/* TABLE BOOKING */}
-          {startDate && (
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Time</TableCell>
-                  <TableCell>Price</TableCell>
-                  <TableCell>Booking</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {schedule.map((slot) => (
+          {startDate &&
+            selectedCategory &&
+            selectedStadium &&
+            !isLoading &&
+            isClicked && (
+              <Table>
+                <TableHead>
                   <TableRow>
-                    <TableCell>{slot.time}</TableCell>
-                    <TableCell>{slot.price} VND</TableCell>
-                    <TableCell>
-                      {slot.booked ? (
-                        <IconButton
-                          aria-label="delete"
-                          style={{
-                            color: "red",
-                          }}
-                          disabled
-                        >
-                          <CancelIcon disabled />
-                        </IconButton>
-                      ) : (
-                        <IconButton
-                          key={slot.index}
-                          aria-label="delete"
-                          onClick={() => handleScheduleClick(slot)}
-                          style={{
-                            color: iconClicked[slot.index] ? "green" : "gray",
-                          }}
-                        >
-                          <CheckCircleIcon />
-                        </IconButton>
-                      )}
-                      {/* <Button
+                    <TableCell>Time</TableCell>
+                    <TableCell>Price</TableCell>
+                    <TableCell>Booking</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {schedule.map((slot) => (
+                    <TableRow>
+                      <TableCell>{slot.time}</TableCell>
+                      <TableCell>{slot.price} VND</TableCell>
+                      <TableCell>
+                        {slot.booked ? (
+                          <IconButton
+                            aria-label="delete"
+                            style={{
+                              color: "red",
+                            }}
+                            disabled
+                          >
+                            <CancelIcon disabled />
+                          </IconButton>
+                        ) : (
+                          <IconButton
+                            key={slot.index}
+                            aria-label="delete"
+                            onClick={() => handleScheduleClick(slot)}
+                            style={{
+                              color: iconClicked[slot.index] ? "green" : "gray",
+                            }}
+                          >
+                            <CheckCircleIcon />
+                          </IconButton>
+                        )}
+                        {/* <Button
                   variant="contained"
                   color="success"
                   disabled={slot.booked}
@@ -281,12 +342,12 @@ const BookingPage = () => {
                 >
                   {slot.booked ? "Booked" : "Book"}
                 </Button> */}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
         </Container>
       </div>
 
