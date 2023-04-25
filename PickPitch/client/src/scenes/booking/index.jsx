@@ -6,7 +6,7 @@ import Footer from "../../components/Footer";
 import PitchBooking from "../test";
 import DataTable from "../../components/ScheduleBooking";
 import axios from "../../state/axios-instance";
-import { PropagateLoader } from "react-spinners";
+import Loading from "../../components/Loading";
 
 // TEST
 import {
@@ -50,11 +50,11 @@ const sampleData = [
 ];
 
 const BookingPage = () => {
-  const [stadiums, setStadiums] = useState([]);
   const token = useSelector((state) => state.global.token);
   const user = useSelector((state) => state.global.user);
 
   /*  ADD PART */
+  const [stadiums, setStadiums] = useState([]);
   const [schedule, setSchedule] = useState([]);
   const [selectedStadium, setSelectedStadium] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -63,6 +63,7 @@ const BookingPage = () => {
   const [informationTicket, setInformationTicket] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
+  const [bookingTime, setBookingTime] = useState([]);
 
   const location = useLocation();
 
@@ -71,11 +72,8 @@ const BookingPage = () => {
   const oneWeekLater = new Date(
     currentDate.getTime() + 30 * 24 * 60 * 60 * 1000
   );
-
-  const numberOfButtons = 14; // Adjust this value as needed
-  const [iconClicked, setIconClicked] = useState(
-    Array(numberOfButtons).fill(false)
-  );
+  // Adjust this value as needed
+  const [iconClicked2, setIconClicked2] = useState({});
 
   //load stadium
   useEffect(() => {
@@ -97,22 +95,12 @@ const BookingPage = () => {
   // Fetch Category of Stadium
   useEffect(() => {
     if (selectedStadium !== "") {
-      console.log("fetch API stadium:", selectedStadium);
       axios
         .get(`/api/stadium/${selectedStadium}/category`)
         .then((res) => setCategories(res.data))
         .catch((err) => console.log(err));
     }
   }, [selectedStadium]);
-
-  useEffect(() => {
-    console.log("cate:", categories);
-  }, [categories]);
-
-  useEffect(() => {
-    setSchedule(rows);
-    // console.log("send api fetch schedule and booking data");
-  }, [startDate]);
 
   useEffect(() => {
     console.log("total price:", totalPrice);
@@ -123,40 +111,26 @@ const BookingPage = () => {
   }, [informationTicket]);
 
   useEffect(() => {
-    console.log("cate selected:", selectedCategory);
-  }, [selectedCategory]);
+    if (bookingTime.length > 0) {
+      const newIconClicked = {};
+      bookingTime.forEach((booking) => {
+        booking.time.forEach((time, index) => {
+          const key = `${index}_${booking.pitch._id}`;
+          newIconClicked[key] = false;
+        });
+      });
+      setIconClicked2(newIconClicked);
+    }
+  }, [bookingTime]);
 
   const handleSelectDate = (date) => {
     setStartDate(date);
-    // console.log("Info send:", selectedStadium, selectedCategory, date);
-    // .get(`/api/stadium/643778507fa3d436c5abd3a5/category/San5`)
-    // axios
-    //   .get(`/api/stadium/${selectedStadium}/category/${selectedCategory}`, {
-    //     params: {
-    //       date: `${startDate}`,
-    //     },
-    //   })
-    //   .then((res) => console.log("TIME BOOKING:", res.data))
-    //   .catch((err) => console.log(err));
-    // console.log("SEND API DATE:", date);
   };
 
-  // const handleGetBookingTime = () => {
-  //   console.log("Info send:", selectedStadium, selectedCategory, startDate);
-  //   axios
-  //     .get(`/api/stadium/${selectedStadium}/category/${selectedCategory}`, {
-  //       params: {
-  //         date: `${startDate}`,
-  //       },
-  //     })
-  //     .then((res) => console.log("TIME BOOKING:", res.data))
-  //     .catch((err) => console.log(err));
-  // };
-
   const handleGetBookingTime = async () => {
-    console.log("Info send:", selectedStadium, selectedCategory, startDate);
     setIsLoading(true);
     try {
+      // console.log("date:", startDate);
       const res = await axios.get(
         `/api/stadium/${selectedStadium}/category/${selectedCategory}`,
         {
@@ -165,7 +139,7 @@ const BookingPage = () => {
           },
         }
       );
-      console.log("TIME BOOKING:", res.data);
+      setBookingTime(res.data);
     } catch (err) {
       console.log(err);
     } finally {
@@ -173,22 +147,34 @@ const BookingPage = () => {
     }
   };
 
-  function handleScheduleClick(slot) {
-    console.log("index:", slot);
-    const updatedIconClicked = [...iconClicked];
-    updatedIconClicked[slot.index] = !updatedIconClicked[slot.index];
-    setIconClicked(updatedIconClicked);
+  function handleScheduleClick(slot, price, pitchId, index) {
+    const updatedIconClicked2 = iconClicked2;
+
+    updatedIconClicked2[index + "_" + pitchId] =
+      !updatedIconClicked2[index + "_" + pitchId];
+    setIconClicked2(updatedIconClicked2);
+
     let total_price = totalPrice;
-    if (updatedIconClicked[slot.index] === true) {
-      total_price += Number(slot.price) * 1000;
+    if (updatedIconClicked2[index + "_" + pitchId] === true) {
+      total_price += Number(price);
       const newinfo = {
-        time: slot.time,
-        price: slot.price,
+        pitchId,
+        time: slot.start + "-" + slot.end,
+        price: price,
       };
       setInformationTicket([...informationTicket, newinfo]);
     } else {
-      total_price -= Number(slot.price) * 1000;
-      setInformationTicket(informationTicket.slice(0, -1));
+      total_price -= Number(price);
+
+      const filteredInformationTicket = informationTicket.filter((info) => {
+        return !(
+          info.pitchId === pitchId &&
+          info.time === slot.start + "-" + slot.end &&
+          info.price === price
+        );
+      });
+      setInformationTicket(filteredInformationTicket);
+      setInformationTicket(filteredInformationTicket);
     }
     setTotalPrice(total_price);
   }
@@ -210,22 +196,6 @@ const BookingPage = () => {
       </div>
 
       <div className="container d-flex flex-column justify-content-center mx-auto mt-5">
-        {/* DATE PICKER */}
-        {/* <div className="mt-3 d-flex justify-content-center">
-          <DatePicker
-            selected={startDate}
-            onChange={(date) => setStartDate(date)}
-            minDate={currentDate}
-            maxDate={oneWeekLater}
-            showDisabledMonthNavigation
-            inline
-            calendarContainer={MyContainer}
-          />
-        </div> */}
-
-        {/* SCHEDULE */}
-        {/* {startDate && <DataTable />} */}
-
         {/* ******************************** */}
 
         <Container className="d-flex flex-column justify-content-center">
@@ -238,6 +208,9 @@ const BookingPage = () => {
             onChange={(e) => {
               setSelectedStadium(e.target.value);
               setSelectedCategory("");
+              setIsClicked(false);
+              setInformationTicket([]);
+              setTotalPrice(0);
             }}
           >
             {stadiums.map((stadium) => (
@@ -252,7 +225,12 @@ const BookingPage = () => {
             aria-label=".form-select example"
             id="category-select"
             value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
+            onChange={(e) => {
+              setIsClicked(false);
+              setSelectedCategory(e.target.value);
+              setInformationTicket([]);
+              setTotalPrice(0);
+            }}
           >
             <option value="" disabled selected>
               Select category
@@ -282,6 +260,8 @@ const BookingPage = () => {
                   onClick={() => {
                     setIsClicked(true);
                     handleGetBookingTime();
+                    setInformationTicket([]);
+                    setTotalPrice(0);
                   }}
                 >
                   Confirm
@@ -290,7 +270,9 @@ const BookingPage = () => {
             }
           </div>
 
-          {isLoading && <PropagateLoader color="#36d7b7" />}
+          {isLoading && selectedCategory && selectedStadium && startDate && (
+            <Loading />
+          )}
 
           {/* TABLE BOOKING */}
           {startDate &&
@@ -303,46 +285,61 @@ const BookingPage = () => {
                   <TableRow>
                     <TableCell>Time</TableCell>
                     <TableCell>Price</TableCell>
-                    <TableCell>Booking</TableCell>
+                    {bookingTime.map((time) => (
+                      <TableCell key={time.pitch.name} colSpan={time.colSpan}>
+                        {time.pitch.name}
+                      </TableCell>
+                    ))}
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {schedule.map((slot) => (
-                    <TableRow>
-                      <TableCell>{slot.time}</TableCell>
-                      <TableCell>{slot.price} VND</TableCell>
+                  {bookingTime[0].time.map((timeSlot, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{`${timeSlot.start} - ${timeSlot.end}`}</TableCell>
                       <TableCell>
-                        {slot.booked ? (
-                          <IconButton
-                            aria-label="delete"
-                            style={{
-                              color: "red",
-                            }}
-                            disabled
-                          >
-                            <CancelIcon disabled />
-                          </IconButton>
-                        ) : (
-                          <IconButton
-                            key={slot.index}
-                            aria-label="delete"
-                            onClick={() => handleScheduleClick(slot)}
-                            style={{
-                              color: iconClicked[slot.index] ? "green" : "gray",
-                            }}
-                          >
-                            <CheckCircleIcon />
-                          </IconButton>
-                        )}
-                        {/* <Button
-                  variant="contained"
-                  color="success"
-                  disabled={slot.booked}
-                  onClick={() => handleBooking(index)}
-                >
-                  {slot.booked ? "Booked" : "Book"}
-                </Button> */}
+                        {index < 11
+                          ? bookingTime[0].priceDaytime
+                          : bookingTime[0].priceNighttime}{" "}
+                        VND
                       </TableCell>
+                      {bookingTime.map((booking) => (
+                        <TableCell key={booking.pitch._id}>
+                          {booking.time[index].check ? (
+                            <IconButton
+                              aria-label="delete"
+                              style={{
+                                color: "red",
+                              }}
+                              disabled
+                            >
+                              <CancelIcon disabled />
+                            </IconButton>
+                          ) : (
+                            <IconButton
+                              aria-label="check"
+                              onClick={() =>
+                                handleScheduleClick(
+                                  booking.time[index],
+                                  index < 11
+                                    ? booking.priceDaytime
+                                    : booking.priceNighttime,
+                                  booking.pitch._id,
+                                  index
+                                )
+                              }
+                              style={{
+                                color: iconClicked2[
+                                  index + "_" + booking.pitch._id
+                                ]
+                                  ? "green"
+                                  : "gray",
+                              }}
+                            >
+                              <CheckCircleIcon />
+                            </IconButton>
+                          )}
+                        </TableCell>
+                      ))}
                     </TableRow>
                   ))}
                 </TableBody>
