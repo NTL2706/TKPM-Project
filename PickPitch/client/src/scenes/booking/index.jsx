@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import { Container, Row, Col, Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import DatePicker, { CalendarContainer } from "react-datepicker";
 import Footer from "../../components/Footer";
@@ -23,39 +22,16 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { useLocation } from "react-router-dom";
-
-const rows = [
-  { index: 1, time: "8am-9am", price: "300.000", booked: false },
-  { index: 2, time: "9am-10am", price: "300.000", booked: false },
-  { index: 3, time: "10am-11am", price: "300.000", booked: false },
-  { index: 4, time: "11am-12pm", price: "300.000", booked: false },
-  { index: 5, time: "12pm-1pm", price: "300.000", booked: false },
-  { index: 6, time: "1pm-2pm", price: "300.000", booked: false },
-  { index: 7, time: "2pm-3pm", price: "300.000", booked: true },
-  { index: 8, time: "3pm-4pm", price: "300.000", booked: false },
-  { index: 9, time: "4pm-5pm", price: "300.000", booked: false },
-  { index: 10, time: "5pm-6pm", price: "300.000", booked: false },
-  { index: 11, time: "6pm-7pm", price: "500.000", booked: true },
-  { index: 12, time: "7pm-8pm", price: "500.000", booked: true },
-  { index: 13, time: "8pm-9pm", price: "500.000", booked: false },
-  { index: 14, time: "9pm-10pm", price: "500.000", booked: false },
-];
-
-// Sample data
-const sampleData = [
-  { time: "10:00", price: 50, booked: false },
-  { time: "11:00", price: 50, booked: true },
-  { time: "12:00", price: 50, booked: false },
-];
+import { useLocation, useNavigate } from "react-router-dom";
 
 const BookingPage = () => {
   const token = useSelector((state) => state.global.token);
   const user = useSelector((state) => state.global.user);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   /*  ADD PART */
   const [stadiums, setStadiums] = useState([]);
-  const [schedule, setSchedule] = useState([]);
   const [selectedStadium, setSelectedStadium] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [categories, setCategories] = useState([true, true]);
@@ -64,8 +40,6 @@ const BookingPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
   const [bookingTime, setBookingTime] = useState([]);
-
-  const location = useLocation();
 
   const [startDate, setStartDate] = useState(null);
   const currentDate = new Date();
@@ -112,6 +86,7 @@ const BookingPage = () => {
 
   useEffect(() => {
     if (bookingTime.length > 0) {
+      console.log("booking time:", bookingTime);
       const newIconClicked = {};
       bookingTime.forEach((booking) => {
         booking.time.forEach((time, index) => {
@@ -149,6 +124,9 @@ const BookingPage = () => {
 
   function handleScheduleClick(slot, price, pitchId, index) {
     const updatedIconClicked2 = iconClicked2;
+    console.log("slot", slot);
+    console.log("pitchId", pitchId);
+    console.log("index", index);
 
     updatedIconClicked2[index + "_" + pitchId] =
       !updatedIconClicked2[index + "_" + pitchId];
@@ -157,8 +135,16 @@ const BookingPage = () => {
     let total_price = totalPrice;
     if (updatedIconClicked2[index + "_" + pitchId] === true) {
       total_price += Number(price);
+      console.log("BOOKING TIME SS", bookingTime);
+      const pitchName = bookingTime.filter(
+        (book) => book.pitch._id === pitchId
+      )[0].pitch.name;
+
+      console.log("PITCH NAME SS:", pitchName);
+
       const newinfo = {
         pitchId,
+        pitchName,
         time: slot.start + "-" + slot.end,
         price: price,
       };
@@ -178,6 +164,20 @@ const BookingPage = () => {
     }
     setTotalPrice(total_price);
   }
+
+  const handleNavigate = () => {
+    const stadiumName = stadiums.filter(
+      (stadium) => stadium._id === selectedStadium
+    )[0].name;
+    const data = {
+      totalPrice,
+      informationTicket,
+      stadiumName,
+      stadiumId: selectedStadium,
+      date: startDate,
+    };
+    navigate("/bookingDetail", { state: { data } });
+  };
 
   /* ****************************************  */
 
@@ -369,7 +369,8 @@ const BookingPage = () => {
             })}
           </div>
           <Button
-            href="/bookingDetail"
+            onClick={handleNavigate}
+            // href="/bookingDetail"
             variant="outline-success"
             style={{ zIndex: 1 }}
           >
