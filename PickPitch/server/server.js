@@ -11,7 +11,6 @@ const cors = require("cors");
 const env = require("./configs/envConfigs");
 const app = express();
 const connectDataBase = require("./configs/database");
-var PORT = env.port;
 const route = require("./routes/index");
 const passport = require("./configs/passport");
 const hbs = exphbs.create({
@@ -21,6 +20,7 @@ const hbs = exphbs.create({
   layoutsDir: __dirname + "/views/layouts",
   partialsDir: __dirname + "/views/partials",
 });
+var PORT = env.port;
 
 // Deploying functions
 // register `hbs.engine` with the Express app.

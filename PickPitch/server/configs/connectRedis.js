@@ -17,15 +17,15 @@ pub.connect();
 sub.connect();
 
 pub.on("connect", () => {
-  console.log("pub connect to redis");
+  console.log("Pub connect to redis");
 });
 
 sub.on("connect", () => {
-  console.log("sub connect to redis");
+  console.log("Pub connect to redis");
 });
 
 sub.subscribe("__keyevent@0__:expired", async (message, channel) => {
-    console.log(message)
+  console.log(message);
 });
 
-module.exports = {pub,sub};
+module.exports = { pub, sub };
