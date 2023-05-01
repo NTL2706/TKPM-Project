@@ -21,6 +21,7 @@
     "helmet": "^6.0.1",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.22",
+    "react-spinners": "^0.13.8",
     "xlsx": "^0.18.5"
   }
 }

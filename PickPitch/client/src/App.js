@@ -11,6 +11,7 @@ import Login from "./scenes/login";
 import Register from "./scenes/register";
 import HomePage from "./scenes/homepage";
 import BookingPage from "./scenes/booking";
+import BookingDetail from "./components/BookingDetails";
 
 function App() {
   const mode = useSelector((state) => state.global.mode);
@@ -33,6 +34,7 @@ function App() {
             /> */}
             <Route path="/homepage" element={<HomePage />} />
             <Route path="/booking" element={<BookingPage />} />
+            <Route path="/bookingDetail" element={<BookingDetail />} />
           </Routes>
           {/* <Footer /> */}
         </ThemeProvider>
