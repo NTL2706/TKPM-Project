@@ -35,20 +35,25 @@ app.engine("hbs", hbs.engine);
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname + "/views"));
 
+// Use JSON parser for all non-webhook routes
+// app.use((req, res, next) => {
+//   if (req.originalUrl.startsWith("/payment/stripe/webhook")) {
+//     next();
+//   } else {
+//     express.json()(req, res, next);
+//   }
+// });
 app.use(
-  bodyParser.urlencoded({
-    extended: false,
+  bodyParser.json({
+    verify: (req, res, buf) => {
+      req.rawBody = buf;
+    },
   })
 );
-
-// parse application/json
+// Setup express response and body parser configurations
+app.use(express.json());
 app.use(bodyParser.json());
-
-app.use(
-  express.urlencoded({
-    extended: true,
-  })
-);
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // setup cookie and use passport
 app.use(require("cookie-parser")());

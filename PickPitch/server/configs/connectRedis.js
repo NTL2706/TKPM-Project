@@ -1,47 +1,14 @@
-<<<<<<< HEAD
-﻿const redis = require("redis");
-const env = require("../configs/envConfigs");
-let connect_redis = {
-  password: env.REDIS_PASSWORD,
-  socket: {
-    host: env.REDIS_HOSTNAME,
-    port: env.REDIS_PORT,
-  },
-};
-
-let pub, sub;
-
-pub = redis.createClient(connect_redis);
-sub = redis.createClient(connect_redis);
-
-pub.connect();
-sub.connect();
-
-pub.on("connect", () => {
-  console.log("Pub connect to redis");
-});
-
-sub.on("connect", () => {
-  console.log("Pub connect to redis");
-});
-
-sub.subscribe("__keyevent@0__:expired", async (message, channel) => {
-  console.log(message);
-});
-
-module.exports = { pub, sub };
-=======
-﻿const redis = require("redis");
+const redis = require("redis");
 const env = require("../configs/envConfigs");
 const Ticket = require("../models/Ticket");
 const TimeBooking = require("../models/TimeBooking");
-let connect_redis = {
-  password: env.REDIS_PASSWORD,
-  socket: {
-    host: env.REDIS_HOSTNAME,
-    port: env.REDIS_PORT,
-  },
-};
+// let connect_redis = {
+//   password: env.REDIS_PASSWORD,
+//   socket: {
+//     host: env.REDIS_HOSTNAME,
+//     port: env.REDIS_PORT,
+//   },
+// };
 
 let pub, sub;
 
@@ -63,27 +30,31 @@ sub.subscribe("__keyevent@0__:expired", async (message, channel) => {
   Ticket.findOne({
     _id: message,
   }).then(async (ticket) => {
-    
     if (ticket.not_paid) {
       ticket.pitchs.forEach(async (pitch) => {
         console.log(pitch);
         pitch.time.split(",").forEach(async (TIME) => {
-          
           TimeBooking.findOne({
             pitch_id: pitch.pitch_id,
             time: new Date(TIME).toISOString(),
           }).then(async (booking) => {
             console.log(booking);
-            await TimeBooking.deleteOne({_id: booking._id });
+            await TimeBooking.deleteOne({ _id: booking._id });
           });
         });
       });
     }
-    await Ticket.updateOne({_id:ticket._id},{
-      is_delete:true
-    })
+    await Ticket.updateOne(
+      { _id: ticket._id },
+      {
+        is_delete: true,
+        update_at: {
+          update_time: Date.now(),
+          update_content: "Ticket is deteted",
+        },
+      }
+    );
   });
 });
 
 module.exports = { pub, sub };
->>>>>>> 3616d9e9324cfc63d2cda72639ac253a0b62bdf4
