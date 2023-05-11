@@ -20,6 +20,37 @@ const hbs = exphbs.create({
   defaultLayout: "main",
   layoutsDir: __dirname + "/views/layouts",
   partialsDir: __dirname + "/views/partials",
+  helpers:
+  
+  {
+    "ifCond": function (v1, operator, v2, options) {
+
+      switch (operator) {
+          case '==':
+              return (v1 == v2) ? options.fn(this) : options.inverse(this);
+          case '===':
+              return (v1 === v2) ? options.fn(this) : options.inverse(this);
+          case '!=':
+              return (v1 != v2) ? options.fn(this) : options.inverse(this);
+          case '!==':
+              return (v1 !== v2) ? options.fn(this) : options.inverse(this);
+          case '<':
+              return (v1 < v2) ? options.fn(this) : options.inverse(this);
+          case '<=':
+              return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+          case '>':
+              return (v1 > v2) ? options.fn(this) : options.inverse(this);
+          case '>=':
+              return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+          case '&&':
+              return (v1 && v2) ? options.fn(this) : options.inverse(this);
+          case '||':
+              return (v1 || v2) ? options.fn(this) : options.inverse(this);
+          default:
+              return options.inverse(this);
+      }
+  }
+  }
 });
 
 // Deploying functions
