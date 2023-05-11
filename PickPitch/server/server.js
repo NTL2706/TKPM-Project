@@ -11,7 +11,6 @@ const cors = require("cors");
 const env = require("./configs/envConfigs");
 const app = express();
 const connectDataBase = require("./configs/database");
-var PORT = env.port;
 const route = require("./routes/index");
 const passport = require("./configs/passport");
 const hbs = exphbs.create({
@@ -20,38 +19,8 @@ const hbs = exphbs.create({
   defaultLayout: "main",
   layoutsDir: __dirname + "/views/layouts",
   partialsDir: __dirname + "/views/partials",
-  helpers:
-  
-  {
-    "ifCond": function (v1, operator, v2, options) {
-
-      switch (operator) {
-          case '==':
-              return (v1 == v2) ? options.fn(this) : options.inverse(this);
-          case '===':
-              return (v1 === v2) ? options.fn(this) : options.inverse(this);
-          case '!=':
-              return (v1 != v2) ? options.fn(this) : options.inverse(this);
-          case '!==':
-              return (v1 !== v2) ? options.fn(this) : options.inverse(this);
-          case '<':
-              return (v1 < v2) ? options.fn(this) : options.inverse(this);
-          case '<=':
-              return (v1 <= v2) ? options.fn(this) : options.inverse(this);
-          case '>':
-              return (v1 > v2) ? options.fn(this) : options.inverse(this);
-          case '>=':
-              return (v1 >= v2) ? options.fn(this) : options.inverse(this);
-          case '&&':
-              return (v1 && v2) ? options.fn(this) : options.inverse(this);
-          case '||':
-              return (v1 || v2) ? options.fn(this) : options.inverse(this);
-          default:
-              return options.inverse(this);
-      }
-  }
-  }
 });
+var PORT = env.port;
 
 // Deploying functions
 // register `hbs.engine` with the Express app.
@@ -66,20 +35,25 @@ app.engine("hbs", hbs.engine);
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname + "/views"));
 
+// Use JSON parser for all non-webhook routes
+// app.use((req, res, next) => {
+//   if (req.originalUrl.startsWith("/payment/stripe/webhook")) {
+//     next();
+//   } else {
+//     express.json()(req, res, next);
+//   }
+// });
 app.use(
-  bodyParser.urlencoded({
-    extended: false,
+  bodyParser.json({
+    verify: (req, res, buf) => {
+      req.rawBody = buf;
+    },
   })
 );
-
-// parse application/json
+// Setup express response and body parser configurations
+app.use(express.json());
 app.use(bodyParser.json());
-
-app.use(
-  express.urlencoded({
-    extended: true,
-  })
-);
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // setup cookie and use passport
 app.use(require("cookie-parser")());

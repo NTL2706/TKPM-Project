@@ -1,6 +1,7 @@
 ﻿const { pub, sub } = require("../../configs/connectRedis");
 const TimeBooking = require("../../models/TimeBooking");
 const Ticket = require("../../models/Ticket");
+const handlerStripe = require("../../utils/stripe");
 const booking = {
   postBooking: async (req, res) => {
     //Example
@@ -45,21 +46,37 @@ const booking = {
 
     const informationTicket = req.body.information_ticket;
     const totalPrice = req.body.total;
-    const user_id = req.body.user_id;
+    const paymentType = req.body.payment;
+    let linkPayment;
+
     try {
       const pitchs = [];
-
-      for (let i of informationTicket) {
-        let check = pitchs.find((element) => {
-          if (element.pitch_id == i.pitch_id) {
-            element.time += "," + i.time;
-            return true;
-          }
-          return false;
+      // TODO: check booking exists
+      console.log(informationTicket);
+      const conditions = {
+        $or: informationTicket.map((item) => {
+          const { price, ...rest } = item;
+          return rest;
+        }),
+      };
+      const existingBooking = await TimeBooking.findOne(conditions);
+      if (existingBooking) {
+        console.log("Booking is alreary exists");
+        return res.status(404).json({
+          state: "error",
+          error: "Booking is alreary exists",
         });
+      }
 
-        if (check == undefined) {
-          pitchs.push(i);
+      //TODO: grouping by pitch id and aggregating times
+      for (const i of informationTicket) {
+        let check = pitchs.find((element) => element.pitch_id === i.pitch_id);
+
+        if (check === undefined) {
+          const temp = { ...i };
+          pitchs.push(temp);
+        } else {
+          check.time += "," + i.time;
         }
       }
       // for (let i = 0; i < informationTicket.length; i++) {
@@ -75,10 +92,10 @@ const booking = {
       //     }
       //   })
       // }
-      console.log(pitchs);
+
+      //TODO: create ticket with is_paid = false
       const createTicket = new Ticket({
         pitchs: pitchs,
-        user_id: user_id,
         price: totalPrice,
         is_delete: false,
         not_paid: true,
@@ -86,6 +103,17 @@ const booking = {
       });
 
       createTicket.save().then(async (data) => {
+        //TODO: create link payment
+        if (paymentType == "stripe") {
+          linkPayment = await handlerStripe.stripePayment(
+            data._id,
+            req.body.information_ticket
+          );
+          if (linkPayment.status == "Error") {
+            return res.status(404).json(linkPayment);
+          }
+        }
+
         for (let i = 0; i < data.pitchs.length; i++) {
           let timeofpitchs = data.pitchs[i].time.split(",");
           for (let j = 0; j < timeofpitchs.length; j++) {
@@ -96,13 +124,27 @@ const booking = {
             await booking_time.save();
           }
         }
-        await pub.configSet("notify-keyspace-events", "Ex");
-        await pub.setEx(String(data._id), 5, "hello");
+        try {
+          // push information_ticket in redis
+          await pub.configSet("notify-keyspace-events", "Ex");
+          await pub.setEx(String(data._id), 20, "hello");
+        } catch (err) {
+          console.log(err);
+        }
+
+        // return respont status 200
+        return res.status(200).json({
+          state: "successfully",
+          url: linkPayment.url,
+        });
       });
-      res.status(200).json({
-        state: "successfully",
+    } catch (err) {
+      console.log(err);
+      return res.status(404).json({
+        state: "error",
+        error: err,
       });
-    } catch (err) {}
+    }
   },
 
   getUserTicket: async (req, res) => {
@@ -152,5 +194,153 @@ const booking = {
     
   },
 };
+
+
+
+// const booking = {
+//   postBooking: async (req, res) => {
+//     //Example
+//     /*
+//     INPUT:
+//     information_ticket = {
+//       [
+//       {
+//         pitch_id:...,
+//         time: ,
+//       }
+//       {
+//         pitch_id:...,
+//         time,
+//       }
+//       ],
+
+//       total:...
+//     }
+    
+//     because input maybe have a lot of duplicate pitch_id
+//     {
+//       pitch_id:1
+//       time 6am
+//     }
+//     {
+//       pitch_id:1
+//       time: 7am
+//     }
+//     ===>
+//     PITCHS =[
+//       {
+//         pitch_id:1
+//         time:[6am, 7am]
+//       }
+//       {
+//         pitch_id:2
+//         time:[6am, 7am]
+//       }
+//     ]
+//     */
+
+//     const informationTicket = req.body.information_ticket;
+//     const totalPrice = req.body.total;
+//     const paymentType = req.body.payment;
+//     let linkPayment;
+
+//     try {
+//       const pitchs = [];
+//       // TODO: check booking exists
+//       console.log(informationTicket);
+//       const conditions = {
+//         $or: informationTicket.map((item) => {
+//           const { price, ...rest } = item;
+//           return rest;
+//         }),
+//       };
+//       const existingBooking = await TimeBooking.findOne(conditions);
+//       if (existingBooking) {
+//         console.log("Booking is alreary exists");
+//         return res.status(404).json({
+//           state: "error",
+//           error: "Booking is alreary exists",
+//         });
+//       }
+
+//       //TODO: grouping by pitch id and aggregating times
+//       for (const i of informationTicket) {
+//         let check = pitchs.find((element) => element.pitch_id === i.pitch_id);
+
+//         if (check === undefined) {
+//           const temp = { ...i };
+//           pitchs.push(temp);
+//         } else {
+//           check.time += "," + i.time;
+//         }
+//       }
+//       // for (let i = 0; i < informationTicket.length; i++) {
+//       //   const temp ={};
+//       //   const {pitch_id,time,price} = informationTicket[i];
+//       //   temp.pitch_id = pitch_id;
+//       //   temp.time = time;
+//       //   temp.price = price;
+
+//       //   let check = pitchs.find(element =>{
+//       //     if (element.pitch_id){
+
+//       //     }
+//       //   })
+//       // }
+
+//       //TODO: create ticket with is_paid = false
+//       const createTicket = new Ticket({
+//         pitchs: pitchs,
+//         price: totalPrice,
+//         is_delete: false,
+//         not_paid: true,
+//         total: totalPrice,
+//       });
+
+//       createTicket.save().then(async (data) => {
+//         //TODO: create link payment
+//         if (paymentType == "stripe") {
+//           linkPayment = await handlerStripe.stripePayment(
+//             data._id,
+//             req.body.information_ticket
+//           );
+//           if (linkPayment.status == "Error") {
+//             return res.status(404).json(linkPayment);
+//           }
+//         }
+
+//         for (let i = 0; i < data.pitchs.length; i++) {
+//           let timeofpitchs = data.pitchs[i].time.split(",");
+//           for (let j = 0; j < timeofpitchs.length; j++) {
+//             const booking_time = new TimeBooking({
+//               time: new Date(timeofpitchs[j]).toISOString(),
+//               pitch_id: data.pitchs[i].pitch_id,
+//             });
+//             await booking_time.save();
+//           }
+//         }
+//         try {
+//           // push information_ticket in redis
+//           await pub.configSet("notify-keyspace-events", "Ex");
+//           await pub.setEx(String(data._id), 20, "hello");
+//         } catch (err) {
+//           console.log(err);
+//         }
+
+//         // return respont status 200
+//         return res.status(200).json({
+//           state: "successfully",
+//           url: linkPayment.url,
+//         });
+//       });
+//     } catch (err) {
+//       console.log(err);
+//       return res.status(404).json({
+//         state: "error",
+//         error: err,
+//       });
+//     }
+//   },
+// };
 
 module.exports = booking;

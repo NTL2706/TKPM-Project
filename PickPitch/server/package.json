@@ -29,6 +29,7 @@
     "nodemon": "^2.0.22",
     "passport": "^0.6.0",
     "passport-local-mongoose": "^8.0.0",
-    "redis": "^4.6.5"
+    "redis": "^4.6.5",
+    "stripe": "^12.4.0"
   }
 }
