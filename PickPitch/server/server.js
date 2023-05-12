@@ -47,12 +47,18 @@ const hbs = exphbs.create({
           return options.inverse(this);
       }
     },
+    jsonString: function (data) {
+      return JSON.stringify(data);
+    },
+    eq: function (v1, v2) {
+      return v1 === v2 ? true : false;
+    }
   },
 });
 var PORT = env.port;
 
 // Deploying functions
-// register `hbs.engine` with the Express app.
+// register hbs.engine with the Express app.
 // setup view engine
 app.use(express.static(path.join(__dirname, "/public")));
 
