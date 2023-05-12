@@ -54,6 +54,7 @@ sub.subscribe("__keyevent@0__:expired", async (message, channel) => {
         }
       );
     }
+
   });
 });
 

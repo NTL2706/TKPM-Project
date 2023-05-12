@@ -1,4 +1,4 @@
-﻿const router = require("express").Router();
+const router = require("express").Router();
 const ticketController = require("../../controllers/product/productController");
 
 router.get("/show-ticket", ticketController.showTicket);

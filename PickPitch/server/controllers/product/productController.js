@@ -1,4 +1,4 @@
-﻿const Ticket = require("../../models/Ticket");
+const Ticket = require("../../models/Ticket");
 const User = require("../../models/User");
 const TimeBooking = require("../../models/TimeBooking");
 const handleStripe = require("../../utils/stripe");

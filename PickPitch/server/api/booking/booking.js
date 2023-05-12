@@ -1,4 +1,4 @@
-﻿const { pub, sub } = require("../../configs/connectRedis");
+const { pub, sub } = require("../../configs/connectRedis");
 const TimeBooking = require("../../models/TimeBooking");
 const Ticket = require("../../models/Ticket");
 const User = require("../../models/User");
