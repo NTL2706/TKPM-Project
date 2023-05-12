@@ -19,22 +19,42 @@
             </thead>
             <tbody>
               {{#each tickets}}
-              <tr>
-                <td>{{user_id}}</td>
-                <td>{{_id}}</td>
-                <td> <img src="https://e7.pngegg.com/pngimages/606/459/png-clipart-ticket-illustration-cartoon-movie-tickets-cartoon-character-text.png" alt="iMac" width="80"> </td>
-                <td>Vé đặt sân</td>
-                <td>{{size}}</td>
-                <td>{{create_at}}</td>
-                <td> <span class="label label-success font-weight-100">{{not_paid}}</span> </td>
-                <td><a href="javascript:void(0)" class="text-inverse p-r-10" data-toggle="tooltip" title="Edit"><i class="ti-marker-alt"></i></a> <a href="javascript:void(0)" class="text-inverse" title="Delete" data-toggle="tooltip"><i class="ti-trash"></i></a></td>
-              </tr>
-              
-              
+                <tr>
+                  <td>{{user_name}}</td>
+                  <td>{{_id}}</td>
+                  <td> <img
+                      src="https://e7.pngegg.com/pngimages/606/459/png-clipart-ticket-illustration-cartoon-movie-tickets-cartoon-character-text.png"
+                      alt="iMac" width="80"> </td>
+                  <td>Vé đặt sân</td>
+                  <td>{{size}}</td>
+                  <td>{{create_at}}</td>
+
+                  {{#if is_refund}}
+                    <td>
+                      <span class="label label-warning font-weight-100">Refund</span>
+                    </td>
+                    <td><a href="javascript:void(0)" class="text-inverse p-r-10" data-toggle="tooltip" title=""><i
+                          class="ti-line-dashed"></td>
+                  {{else if (eq not_paid "Paid")}}
+                    <td>
+                      <span class="label label-success font-weight-100">{{not_paid}}</span>
+                    </td>
+                    <td> <a href="/ticket/delete/{{_id}}" onclick="return confirm('You really want to delete')"
+                        class="text-inverse" title="Delete" data-toggle="tooltip"><i class="ti-trash"></i></a></td>
+                  {{else}}
+                    <td>
+                      <span class="label label-danger font-weight-100">{{not_paid}}</span>
+                    </td>
+                    <td><a href="javascript:void(0)" class="text-inverse p-r-10" data-toggle="tooltip" title=""><i
+                          class="ti-line-dashed"></td>
+                  {{/if}}
+                </tr>
+
+
               {{/each}}
-              
+
             </tbody>
-            
+
           </table>
         </div>
       </div>
@@ -45,62 +65,38 @@
   </div>
   <div class="row text-center">
     <div class="col"></div>
-    <nav
-      aria-label="Page navigation example "
-    >
+    <nav aria-label="Page navigation example ">
       <ul class="pagination" style="width: fit-content;">
         {{#ifCond previous ">" 0}}
-          <li class="page-item"><a
-              class="page-link previous"
-              href=""
-              onclick="previousPage({{currentPage}})"
-            >Previous</a></li>
+          <li class="page-item"><a class="page-link previous" href=""
+              onclick="previousPage({{currentPage}})">Previous</a></li>
         {{/ifCond}}
         {{#ifCond previous ">" 0}}
-          <li class="page-item"><a
-              class="page-link"
-              href="{{previousLink}}"
-            >{{previous}}</a></li>
+          <li class="page-item"><a class="page-link" href="{{previousLink}}">{{previous}}</a></li>
         {{/ifCond}}
         {{#ifCond currentPage ">" 0}}
-          <li class="page-item"><a
-              class="page-link"
-              href="{{currentLink}}"
-            >{{currentPage}}</a></li>
+          <li class="page-item"><a class="page-link" href="{{currentLink}}">{{currentPage}}</a></li>
         {{/ifCond}}
         {{#ifCond next ">" 0}}
-          <li class="page-item"><a
-              class="page-link"
-              href="{{nextLink}}"
-            >{{next}}</a></li>
+          <li class="page-item"><a class="page-link" href="{{nextLink}}">{{next}}</a></li>
         {{/ifCond}}
         {{#ifCond next ">" 0}}
-          <li class="page-item"><a
-              class="page-link next"
-              href=""
-              onclick="nextPage({{currentPage}})"
-            >Next</a></li>
+          <li class="page-item"><a class="page-link next" href="" onclick="nextPage({{currentPage}})">Next</a></li>
         {{/ifCond}}
       </ul>
     </nav>
   </div>
 </div>
 <script>
-    function previousPage(page){
+  function previousPage(page) {
 
     const previous = parseInt(page) - 1;
-    $(".previous").attr("href", "/product/"+"show-product" +"?page=" + previous);
+    $(".previous").attr("href", "/ticket/" + "show-ticket" + "?page=" + previous);
   }
 
-  function nextPage(page){
+  function nextPage(page) {
     console.log(page);
     const next = parseInt(page) + 1;
-    $(".next").attr("href", "/product/"+"show-product"+"?page="+ next);
+    $(".next").attr("href", "/ticket/" + "show-ticket" + "?page=" + next);
   }
 </script>
-{{!-- 
-{{#each tickets}}
-  {{#list this}}
-    
-  {{/list}}
-{{/each}} --}}
