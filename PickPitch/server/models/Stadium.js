@@ -12,6 +12,10 @@ const Stadium = new schema(
     ratting: { type: Number, default: 0 },
 
     // tracking information
+    status: {
+      type: String,
+      default: "Open",
+    },
     create_at: {
       type: Date,
       default: Date.now(),

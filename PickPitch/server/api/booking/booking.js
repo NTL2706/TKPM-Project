@@ -1,6 +1,7 @@
 ﻿const { pub, sub } = require("../../configs/connectRedis");
 const TimeBooking = require("../../models/TimeBooking");
 const Ticket = require("../../models/Ticket");
+const User = require("../../models/User");
 const handlerStripe = require("../../utils/stripe");
 const booking = {
   postBooking: async (req, res) => {
@@ -93,13 +94,17 @@ const booking = {
       //   })
       // }
 
-      //TODO: create ticket with is_paid = false
+      //TODO: find user and  create ticket with is_paid = false
+      const user = await User.findById(req.body.user_id);
+
       const createTicket = new Ticket({
         pitchs: pitchs,
         price: totalPrice,
         is_delete: false,
         not_paid: true,
         total: totalPrice,
+        user_id: user._id,
+        user_name: user.user_name
       });
 
       createTicket.save().then(async (data) => {
@@ -169,7 +174,7 @@ const booking = {
     const ticket = await Ticket.findOne({ _id: id_ticket });
     const date_now = Date.now();
     const date_order = ticket.create_at;
-    try{
+    try {
       if (date_order.getDay() - date_now.getDay() >= 2) {
         ticket.pitchs.forEach(async (pitch) => {
           pitch.time.split(",").forEach(async (TIME) => {
@@ -183,15 +188,15 @@ const booking = {
           message: "Delete successfully"
         })
       }
-      else{
+      else {
         return res.json({
           message: "Delete failed"
         })
       }
-    }catch(err){
+    } catch (err) {
 
     }
-    
+
   },
 };
 
@@ -216,7 +221,7 @@ const booking = {
 
 //       total:...
 //     }
-    
+
 //     because input maybe have a lot of duplicate pitch_id
 //     {
 //       pitch_id:1

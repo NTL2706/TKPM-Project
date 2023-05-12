@@ -1,5 +1,7 @@
-﻿const route =require("express").Router();
-const productController = require("../../controllers/product/productController");
-route.get("/show-product",productController.showProduct);
+﻿const router = require("express").Router();
+const ticketController = require("../../controllers/product/productController");
 
-module.exports = route;
+router.get("/show-ticket", ticketController.showTicket);
+router.get("/delete-ticket/:idTicket");
+
+module.exports = router;

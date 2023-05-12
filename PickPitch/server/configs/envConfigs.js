@@ -13,4 +13,8 @@ module.exports = {
   REDIS_PORT: process.env.REDIS_PORT,
   REDIS_PASSWORD: process.env.REDIS_PASSWORD,
   stripePrivateKey: process.env.STRIPE_PRIVATE_KEY,
+
+  mailUserName: process.env.MAIL_USERNAME,
+  mailPassword: process.env.MAIL_PASSWORD,
+  mailFormAddress: process.env.MAIL_FROM_ADDRESS,
 };

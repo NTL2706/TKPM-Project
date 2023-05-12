@@ -8,6 +8,12 @@ const TicketSchema = new Schema(
     not_paid: Boolean,
     total: Number,
     payment_type: String,
+    user_id: [Object],
+    user_name: String,
+    is_refund: {
+      type: Boolean,
+      default: false,
+    },
 
     payment_intent: String,
     create_at: {

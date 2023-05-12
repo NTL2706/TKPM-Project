@@ -69,6 +69,20 @@ async function stripePayment(ticketId, items) {
   }
 }
 
+async function refundPayment(payment_intent) {
+  try {
+    await stripe.refunds.create({
+      payment_intent: payment_intent,
+    });
+
+    return "Success";
+  } catch (error) {
+    console.log(error);
+    return `Error: ${error}`;
+  }
+}
+
 module.exports = {
   stripePayment,
+  refundPayment,
 };
