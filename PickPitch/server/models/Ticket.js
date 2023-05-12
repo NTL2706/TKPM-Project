@@ -7,6 +7,9 @@ const TicketSchema = new Schema(
     price: Number,
     not_paid: Boolean,
     total: Number,
+    user_id:{
+      type:mongoose.Schema.Types.ObjectId
+    },
     payment_type: String,
 
     payment_intent: String,

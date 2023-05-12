@@ -43,17 +43,18 @@ sub.subscribe("__keyevent@0__:expired", async (message, channel) => {
           });
         });
       });
+      await Ticket.updateOne(
+        { _id: ticket._id },
+        {
+          is_delete: true,
+          update_at: {
+            update_time: Date.now(),
+            update_content: "Ticket is deteted",
+          },
+        }
+      );
     }
-    await Ticket.updateOne(
-      { _id: ticket._id },
-      {
-        is_delete: true,
-        update_at: {
-          update_time: Date.now(),
-          update_content: "Ticket is deteted",
-        },
-      }
-    );
+    
   });
 });
 

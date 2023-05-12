@@ -47,6 +47,7 @@ const booking = {
     const informationTicket = req.body.information_ticket;
     const totalPrice = req.body.total;
     const paymentType = req.body.payment;
+    const user_id = req.body.user_id;
     let linkPayment;
 
     try {
@@ -100,6 +101,7 @@ const booking = {
         is_delete: false,
         not_paid: true,
         total: totalPrice,
+        user_id: user_id,
       });
 
       createTicket.save().then(async (data) => {

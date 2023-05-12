@@ -27,9 +27,8 @@
                 <td>{{size}}</td>
                 <td>{{create_at}}</td>
                 <td> <span class="label label-success font-weight-100">{{not_paid}}</span> </td>
-                <td><a href="javascript:void(0)" class="text-inverse p-r-10" data-toggle="tooltip" title="Edit"><i class="ti-marker-alt"></i></a> <a href="javascript:void(0)" class="text-inverse" title="Delete" data-toggle="tooltip"><i class="ti-trash"></i></a></td>
+                <td><a class="text-inverse p-r-10" id="deleteTicket" data-toggle="tooltip" title="Edit" ><i class="ti-marker-alt"></i></a> <a href="/product/delete-product/{{_id}}" class="text-inverse" title="Delete" data-toggle="tooltip" onclick="return confirm('Bạn có muốn xóa không')"><i class="ti-trash"></i></a></td>
               </tr>
-              
               
               {{/each}}
               
@@ -96,6 +95,24 @@
     console.log(page);
     const next = parseInt(page) + 1;
     $(".next").attr("href", "/product/"+"show-product"+"?page="+ next);
+  }
+
+  function DeleteTicket(event){
+    const parent = $(event.target).parents()[2];
+    const ticket_id = $(parent).children()[1].innerHTML;
+
+    $.ajax({
+      url:"/product/delete-product",
+      method:"POST",
+      data:{
+        data:ticket_id
+      }
+    }).then(data=>{
+      $(document).ready(()=>{
+        location.reload();
+      })
+    })
+    
   }
 </script>
 {{!-- 
