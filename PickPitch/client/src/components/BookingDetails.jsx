@@ -9,6 +9,7 @@ import {
   Checkbox,
   Button,
 } from "@mui/material";
+import axios from "../state/axios-instance";
 
 import SendIcon from "@mui/icons-material/Send";
 import { useLocation } from "react-router-dom";
@@ -34,6 +35,10 @@ const BookingDetail = () => {
 
   const handleClickTerm = (event) => {
     setCheckedTerm(event.target.checked);
+  };
+
+  const handleCheckout = () => {
+    const data = {};
   };
 
   return (
@@ -152,7 +157,11 @@ const BookingDetail = () => {
                 </p>
 
                 <hr />
-                <button id="checkout_btn" class="btn btn-warning btn-block">
+                <button
+                  id="checkout_btn"
+                  onClick={handleCheckout}
+                  class="btn btn-warning btn-block"
+                >
                   Proceed to Payment
                 </button>
               </div>
