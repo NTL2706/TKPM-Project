@@ -19,40 +19,46 @@ const hbs = exphbs.create({
   defaultLayout: "main",
   layoutsDir: __dirname + "/views/layouts",
   partialsDir: __dirname + "/views/partials",
-  helpers:{
-  "ifCond": function (v1, operator, v2, options) {
 
-    switch (operator) {
-        case '==':
-            return (v1 == v2) ? options.fn(this) : options.inverse(this);
-        case '===':
-            return (v1 === v2) ? options.fn(this) : options.inverse(this);
-        case '!=':
-            return (v1 != v2) ? options.fn(this) : options.inverse(this);
-        case '!==':
-            return (v1 !== v2) ? options.fn(this) : options.inverse(this);
-        case '<':
-            return (v1 < v2) ? options.fn(this) : options.inverse(this);
-        case '<=':
-            return (v1 <= v2) ? options.fn(this) : options.inverse(this);
-        case '>':
-            return (v1 > v2) ? options.fn(this) : options.inverse(this);
-        case '>=':
-            return (v1 >= v2) ? options.fn(this) : options.inverse(this);
-        case '&&':
-            return (v1 && v2) ? options.fn(this) : options.inverse(this);
-        case '||':
-            return (v1 || v2) ? options.fn(this) : options.inverse(this);
+  helpers: {
+    "ifCond": function (v1, operator, v2, options) {
+      switch (operator) {
+        case "==":
+          return v1 == v2 ? options.fn(this) : options.inverse(this);
+        case "===":
+          return v1 === v2 ? options.fn(this) : options.inverse(this);
+        case "!=":
+          return v1 != v2 ? options.fn(this) : options.inverse(this);
+        case "!==":
+          return v1 !== v2 ? options.fn(this) : options.inverse(this);
+        case "<":
+          return v1 < v2 ? options.fn(this) : options.inverse(this);
+        case "<=":
+          return v1 <= v2 ? options.fn(this) : options.inverse(this);
+        case ">":
+          return v1 > v2 ? options.fn(this) : options.inverse(this);
+        case ">=":
+          return v1 >= v2 ? options.fn(this) : options.inverse(this);
+        case "&&":
+          return v1 && v2 ? options.fn(this) : options.inverse(this);
+        case "||":
+          return v1 || v2 ? options.fn(this) : options.inverse(this);
         default:
-            return options.inverse(this);
+          return options.inverse(this);
+      }
+    },
+    jsonString: function (data) {
+      return JSON.stringify(data);
+    },
+    eq: function (v1, v2) {
+      return v1 === v2 ? true : false;
     }
-  }
-  }
+  },
 });
 var PORT = env.port;
 
 // Deploying functions
-// register `hbs.engine` with the Express app.
+// register hbs.engine with the Express app.
 // setup view engine
 app.use(express.static(path.join(__dirname, "/public")));
 
