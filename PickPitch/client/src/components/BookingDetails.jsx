@@ -99,11 +99,11 @@ const BookingDetail = () => {
                         control={<Radio />}
                         label="Pay with Cash"
                       />
-                      <FormControlLabel
+                      {/* <FormControlLabel
                         value="momo"
                         control={<Radio />}
                         label="Pay with Momo"
-                      />
+                      /> */}
                     </RadioGroup>
                   </FormControl>
 
