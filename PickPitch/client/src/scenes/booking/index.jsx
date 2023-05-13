@@ -105,17 +105,22 @@ const BookingPage = () => {
   const handleGetBookingTime = async () => {
     setIsLoading(true);
     try {
-      // console.log("date:", startDate);
-      const data = {
-        date: startDate,
-        stadium: selectedStadium,
-      };
-      // console.log("DATE SEND", new Date(da).toISOString());
+      let date = new Date(startDate);
+      const day = date.getDate();
+      const month = date.getMonth() + 1;
+      const year = date.getFullYear();
+
+      const combinedDateTime = `${date.getFullYear()}-${(date.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+
+      // console.log("Day: ", `${combinedDateTime}T00:00:00.000+00:00`);
       await axios
-        .get(
-          `/api/stadium/${selectedStadium}/category/${selectedCategory}`,
-          data
-        )
+        .get(`/api/stadium/${selectedStadium}/category/${selectedCategory}`, {
+          params: {
+            date: `${combinedDateTime}T00:00:00.000+00:00`,
+          },
+        })
         .then((res) => setBookingTime(res.data))
         .catch((err) => console.log(err));
       // setBookingTime(res.data);

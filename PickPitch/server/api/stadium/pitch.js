@@ -76,8 +76,9 @@ async function updateTimeSlots(pitchId, timeSlots, date) {
 async function getCategory(req, res) {
   const stadiumId = req.params.id_stadium;
   const category = req.params.category;
-  const date = new Date(req.body.date);
-  console.log(req.body.date, stadiumId, category);
+  const date = new Date(req.query.date);
+  console.log(date);
+  /* console.log(req.query.date); */
   date.setUTCHours(0, 0, 0, 0);
 
   try {
@@ -154,7 +155,7 @@ async function getCategory(req, res) {
     // await all promit from function processPitch
     const updatedPitches = await processPitches(pitches, timeSlots, date);
 
-    // console.log(updatedPitches[0]);
+    console.log(updatedPitches[0]);
     return res.status(200).json(updatedPitches);
   } catch (err) {
     console.log(err);

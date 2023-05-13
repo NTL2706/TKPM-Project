@@ -44,6 +44,7 @@ const BookingDetail = () => {
   const handleCheckout = () => {
     // Convert date and time format
     console.log("user:", user);
+
     const combinedDateTime = `${data.date.getFullYear()}-${(
       data.date.getMonth() + 1
     )
