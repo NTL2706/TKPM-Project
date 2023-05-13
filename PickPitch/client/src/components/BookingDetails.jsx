@@ -9,9 +9,11 @@ import {
   Checkbox,
   Button,
 } from "@mui/material";
+import axios from "../state/axios-instance";
+import { useSelector } from "react-redux";
 
 import SendIcon from "@mui/icons-material/Send";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const BookingDetail = () => {
   const date = new Date().toLocaleString("vi-VN", {
@@ -19,9 +21,12 @@ const BookingDetail = () => {
     month: "long",
     day: "numeric",
   });
-  const [paymentMethod, setPaymentMethod] = useState("cash");
+  const [paymentMethod, setPaymentMethod] = useState("stripe");
   const [checkedTerm, setCheckedTerm] = useState(false);
+  // const [url, setUrl] = useState(null);
   const location = useLocation();
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.global.user);
 
   const data = location.state?.data;
   console.log("data", data);
@@ -34,6 +39,39 @@ const BookingDetail = () => {
 
   const handleClickTerm = (event) => {
     setCheckedTerm(event.target.checked);
+  };
+
+  const handleCheckout = () => {
+    // Convert date and time format
+    console.log("user:", user);
+    const combinedDateTime = `${data.date.getFullYear()}-${(
+      data.date.getMonth() + 1
+    )
+      .toString()
+      .padStart(2, "0")}-${data.date.getDate().toString().padStart(2, "0")}`;
+
+    const transformedData = {
+      information_ticket: data.informationTicket.map((ticket) => ({
+        pitch_id: ticket.pitchId,
+        time: `${combinedDateTime}T${ticket.time.split("-")[0]}:00.000+00:00`,
+        price: ticket.price, // Adjusted price value according to the example (replace with actual logic if needed)
+      })),
+      total: data.totalPrice,
+      user_id: user._id,
+      payment: paymentMethod,
+    };
+
+    console.log("COMBINED", transformedData);
+
+    axios
+      .post("/api/booking", transformedData)
+      .then((res) => {
+        console.log(res);
+        window.location.href = res.data.url;
+      })
+      .catch((err) => console.log(err));
+
+    // const dataSend = {};
   };
 
   return (
@@ -95,15 +133,15 @@ const BookingDetail = () => {
                       onChange={handleChooseMethodPayment}
                     >
                       <FormControlLabel
-                        value="cash"
+                        value="stripe"
                         control={<Radio />}
-                        label="Pay with Cash"
+                        label="Pay with stripe"
                       />
-                      <FormControlLabel
+                      {/* <FormControlLabel
                         value="momo"
                         control={<Radio />}
                         label="Pay with Momo"
-                      />
+                      /> */}
                     </RadioGroup>
                   </FormControl>
 
@@ -152,7 +190,11 @@ const BookingDetail = () => {
                 </p>
 
                 <hr />
-                <button id="checkout_btn" class="btn btn-warning btn-block">
+                <button
+                  id="checkout_btn"
+                  onClick={handleCheckout}
+                  class="btn btn-warning btn-block"
+                >
                   Proceed to Payment
                 </button>
               </div>

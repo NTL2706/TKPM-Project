@@ -34,7 +34,10 @@ function App() {
             /> */}
             <Route path="/homepage" element={<HomePage />} />
             <Route path="/booking" element={<BookingPage />} />
-            <Route path="/bookingDetail" element={<BookingDetail />} />
+            <Route
+              path="/bookingDetail"
+              element={isAuth ? <BookingDetail /> : <Navigate to="/login" />}
+            />
           </Routes>
           {/* <Footer /> */}
         </ThemeProvider>

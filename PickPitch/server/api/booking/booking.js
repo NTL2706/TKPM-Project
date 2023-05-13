@@ -132,7 +132,7 @@ const booking = {
         try {
           // push information_ticket in redis
           await pub.configSet("notify-keyspace-events", "Ex");
-          await pub.setEx(String(data._id), 20, "hello");
+          await pub.setEx(String(data._id), 60 * 2, "hello");
         } catch (err) {
           console.log(err);
         }

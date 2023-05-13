@@ -77,7 +77,7 @@ async function getCategory(req, res) {
   const stadiumId = req.params.id_stadium;
   const category = req.params.category;
   const date = new Date(req.body.date);
-  console.log(date, stadiumId, category);
+  console.log(req.body.date, stadiumId, category);
   date.setUTCHours(0, 0, 0, 0);
 
   try {
