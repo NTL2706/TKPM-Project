@@ -46,7 +46,7 @@ const Login = () => {
     event.preventDefault();
     const req = new FormData(event.currentTarget);
 
-    const response = await axios
+    await axios
       .post("/api/auth/login", {
         email: req.get("email"),
         password: req.get("password"),

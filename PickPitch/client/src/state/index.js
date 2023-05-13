@@ -1,9 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const storedToken = localStorage.getItem("token");
+const storedUser = localStorage.getItem("user");
+
 const initialState = {
   mode: "light",
-  token: null,
-  user: null,
+  token: storedToken ? JSON.parse(storedToken) : null,
+  user: storedUser ? JSON.parse(storedUser) : null,
 };
 
 export const globalSlice = createSlice({
@@ -14,13 +17,23 @@ export const globalSlice = createSlice({
       state.mode = state.mode === "light" ? "dark" : "light";
     },
     setLogin: (state, action) => {
-      // console.log("action:", action.payload);
       state.user = action.payload.user;
       state.token = action.payload.token;
+
+      console.log("TOKEN:", action.payload.token);
+      console.log("USER:", action.payload.user);
+
+      // Save authentication data to localStorage
+      // localStorage.setItem("token", action.payload.token);
+      localStorage.setItem("token", JSON.stringify(action.payload.token));
+      localStorage.setItem("user", JSON.stringify(action.payload.user));
     },
     setLogout: (state) => {
       state.user = null;
       state.token = null;
+      // Clear authentication data from localStorage
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
     },
   },
 });
