@@ -54,8 +54,8 @@ async function stripePayment(ticketId, items) {
           quantity: 1,
         };
       }),
-      success_url: `https://client.com/success.html`,
-      cancel_url: `https://client.com/cancel.html`,
+      success_url: `http://localhost:3000`,
+      cancel_url: `http://localhost:3000`,
     });
     return {
       status: "Success",

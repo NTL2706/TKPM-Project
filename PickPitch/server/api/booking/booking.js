@@ -104,7 +104,7 @@ const booking = {
         not_paid: true,
         total: totalPrice,
         user_id: user._id,
-        user_name: user.user_name
+        user_name: user.user_name,
       });
 
       createTicket.save().then(async (data) => {
@@ -132,7 +132,7 @@ const booking = {
         try {
           // push information_ticket in redis
           await pub.configSet("notify-keyspace-events", "Ex");
-          await pub.setEx(String(data._id), 20, "hello");
+          await pub.setEx(String(data._id), 60 * 2, "hello");
         } catch (err) {
           console.log(err);
         }
@@ -185,22 +185,16 @@ const booking = {
           });
         });
         return res.json({
-          message: "Delete successfully"
-        })
-      }
-      else {
+          message: "Delete successfully",
+        });
+      } else {
         return res.json({
-          message: "Delete failed"
-        })
+          message: "Delete failed",
+        });
       }
-    } catch (err) {
-
-    }
-
+    } catch (err) {}
   },
 };
-
-
 
 // const booking = {
 //   postBooking: async (req, res) => {
