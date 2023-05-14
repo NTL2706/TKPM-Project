@@ -9,7 +9,7 @@ router.post(
   passport.authenticate("local", { failureRedirect: "/auth/login" }),
   function (req, res) {
     console.log(req.user.id);
-    res.redirect("/");
+    res.redirect("/dashboard");
   }
 );
 
